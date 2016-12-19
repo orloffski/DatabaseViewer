@@ -89,8 +89,6 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
 
     @Override
     public void sendConnectConfirmation() {
-        Toast.makeText(getApplicationContext(), "Database deleted", Toast.LENGTH_SHORT).show();
-
         loadDatabasesList();
     }
 

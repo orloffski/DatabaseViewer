@@ -69,6 +69,8 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
         broadcastReceiver.register(getApplicationContext(), intentFilter);
+
+        loadDatabasesList();
     }
 
     private void loadDatabasesList(){

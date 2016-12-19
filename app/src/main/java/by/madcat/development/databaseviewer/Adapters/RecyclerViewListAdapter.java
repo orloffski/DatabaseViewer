@@ -1,6 +1,7 @@
 package by.madcat.development.databaseviewer.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import by.madcat.development.databaseviewer.AddEditDatabaseActivityApplicationActivity;
 import by.madcat.development.databaseviewer.R;
 
 public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewListAdapter.ViewHolder> {
@@ -46,7 +48,11 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
                         switch (item.getItemId()) {
                             case R.id.action_edit:
-                                Toast.makeText(context, "Edit " + holder.database_name.getText().toString(), Toast.LENGTH_SHORT).show();
+                                Intent intent = AddEditDatabaseActivityApplicationActivity.getIntent(
+                                        context,
+                                        AddEditDatabaseActivityApplicationActivity.DATABASE_EDIT,
+                                        holder.database_name.getText().toString());
+                                context.startActivity(intent);
                                 return true;
                             case R.id.action_delete:
                                 Toast.makeText(context, "Delete " + holder.database_name.getText().toString(), Toast.LENGTH_SHORT).show();

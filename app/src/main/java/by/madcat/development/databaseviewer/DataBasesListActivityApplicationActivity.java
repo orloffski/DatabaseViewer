@@ -39,7 +39,7 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
         databasesList.setHasFixedSize(true);
 
         databases = new ArrayList<>();
-        adapter = new RecyclerViewListAdapter(databases, getApplicationContext());
+        adapter = new RecyclerViewListAdapter(databases, this);
 
         databasesList.setAdapter(adapter);
 

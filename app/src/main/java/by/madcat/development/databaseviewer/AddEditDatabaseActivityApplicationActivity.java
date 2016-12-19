@@ -92,7 +92,16 @@ public class AddEditDatabaseActivityApplicationActivity extends AbstractActivity
 
     @Override
     public void sendConnectConfirmation() {
-        Toast.makeText(getApplicationContext(), "Database " + databaseName.getText().toString() + " created", Toast.LENGTH_LONG).show();
+        switch (action){
+            case DATABASE_ADD:
+                Toast.makeText(getApplicationContext(),
+                        "Database " + databaseName.getText().toString() + " created", Toast.LENGTH_LONG).show();
+                break;
+            case DATABASE_EDIT:
+                Toast.makeText(getApplicationContext(),
+                        "Database " + dbName + " renemed to " + databaseName.getText().toString(), Toast.LENGTH_LONG).show();
+                break;
+        }
         this.finish();
     }
 

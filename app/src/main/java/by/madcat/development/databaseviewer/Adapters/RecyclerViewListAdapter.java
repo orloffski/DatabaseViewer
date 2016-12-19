@@ -15,7 +15,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.AddEditDatabaseActivityApplicationActivity;
+import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.R;
+import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.Utils.QueriesList;
 
 public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewListAdapter.ViewHolder> {
 
@@ -46,16 +49,28 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
 
+                        Intent intent;
+
                         switch (item.getItemId()) {
                             case R.id.action_edit:
-                                Intent intent = AddEditDatabaseActivityApplicationActivity.getIntent(
+                                intent = AddEditDatabaseActivityApplicationActivity.getIntent(
                                         context,
                                         AddEditDatabaseActivityApplicationActivity.DATABASE_EDIT,
                                         holder.database_name.getText().toString());
                                 context.startActivity(intent);
                                 return true;
                             case R.id.action_delete:
-                                Toast.makeText(context, "Delete " + holder.database_name.getText().toString(), Toast.LENGTH_SHORT).show();
+                                ConnectModel connectModel = ConnectModel.getInstance("", "", "");
+                                connectModel.setUserRequestToServer(QueriesList.DATABASE_DELETE +
+                                        holder.database_name.getText().toString());
+
+                                intent = new Intent(context, RequestService.class);
+                                intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
+                                intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
+                                intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
+                                intent.putExtra(RequestService.EXECUTE_MODEL, false);
+                                context.startService(intent);
+
                                 return true;
                             default:
                         }

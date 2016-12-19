@@ -3,6 +3,7 @@ package by.madcat.development.databaseviewer.BroadcastReceivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 
 public class ServerRequestBroadcastReceiver extends BroadcastReceiver{
 
@@ -16,6 +17,7 @@ public class ServerRequestBroadcastReceiver extends BroadcastReceiver{
     public static final String BROADCASTRECEIVER_STATUS = "broadcastreceiver_status";
 
     private DataReceiver dataReceiver;
+    private boolean isRegister;
 
     public ServerRequestBroadcastReceiver(DataReceiver dataReceiver){
         this.dataReceiver = dataReceiver;
@@ -41,5 +43,20 @@ public class ServerRequestBroadcastReceiver extends BroadcastReceiver{
                 this.dataReceiver.sendDataFromServer(jsonArrayData);
                 break;
         }
+    }
+
+    public Intent register(Context context, IntentFilter intentFilter){
+        isRegister = true;
+
+        return context.registerReceiver(this, intentFilter);
+    }
+
+    public boolean unregister(Context context){
+        if(isRegister){
+            context.unregisterReceiver(this);
+            isRegister = false;
+            return true;
+        }
+        return false;
     }
 }

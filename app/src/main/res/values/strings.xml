@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DatabaseViewer</string>
+
+    <!-- item menu -->
+    <string name="edit_item">Изменить</string>
+    <string name="delete_item">Удалить</string>
 </resources>

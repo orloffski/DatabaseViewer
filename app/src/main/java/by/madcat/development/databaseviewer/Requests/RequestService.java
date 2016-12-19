@@ -14,11 +14,13 @@ import java.util.Properties;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
-import by.madcat.development.databaseviewer.Utils.SQLUtils;
+import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
 
 public class RequestService extends Service {
 
-    public static final String CONNECTION_STRING = "jdbc:jtds:sqlserver://";
+    public static final String SERVER_IP_ADRESS = "server_ip_adress";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PASSWORD = "user_password";
 
     private boolean isError;
     private String errorMessage;
@@ -27,9 +29,9 @@ public class RequestService extends Service {
 
     private ConnectModel model;
 
+    private String jsonArrayString;
 
     public RequestService() {
-        model = ConnectModel.getInstance("", "", "");
     }
 
     @Override
@@ -39,7 +41,13 @@ public class RequestService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new AsyncTaskRequest().execute();
+        if(intent != null) {
+            model = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
+                    intent.getStringExtra(USER_NAME),
+                    intent.getStringExtra(USER_PASSWORD));
+
+            new AsyncTaskRequest().execute();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -64,11 +72,12 @@ public class RequestService extends Service {
         protected Void doInBackground(Void... voids) {
             try {
                 Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
-                DbConn = DriverManager.getConnection(CONNECTION_STRING + model.getServerIpAdress() + ";", getUsersProperties());
+                DbConn = DriverManager.getConnection(ConnectModel.CONNECTION_STRING + model.getServerIpAdress() + ";", getUsersProperties());
 
                 if(DbConn != null && model.getUserRequestToServer() != null){
                     statement = DbConn.createStatement();
                     resultSet = statement.executeQuery(model.getUserRequestToServer());
+                    jsonArrayString = SqlJsonUtils.createJsonArrayFromResultSet(resultSet).toString();
                 }
             } catch (Exception e) {
                 if(e instanceof SQLException){
@@ -109,7 +118,6 @@ public class RequestService extends Service {
             if(resultSet != null){
                 // send data from server
                 try {
-                    String jsonArrayString = SQLUtils.createJconArrayFromResultSet(resultSet).toString();
                     receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
                             ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_SEND_DATA);
                     receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_DATA, jsonArrayString);

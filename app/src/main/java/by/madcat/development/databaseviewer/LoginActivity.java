@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,13 +27,15 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
 
     private ServerRequestBroadcastReceiver broadcastReceiver;
 
+    private ConnectModel model;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         progressConnect = (AVLoadingIndicatorView)findViewById(R.id.progressConnect);
-        progressConnect.hide();
+        //progressConnect.hide();
 
         connectName = (TextView)findViewById(R.id.connectName);
         serverIpAdress = (TextView)findViewById(R.id.serverIpAdress);
@@ -48,41 +49,56 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
                 progressConnect.show();
                 connectBtn.setEnabled(false);
 
-                ConnectModel model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
+                //Log.d("payment", model.getUserName() + " " + model.getUserPassword());
+
+                /*ConnectModel model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
                         userName.getText().toString(),
-                        userPassword.getText().toString());
+                        userPassword.getText().toString());*/
 
                 Intent intent = new Intent(LoginActivity.this, RequestService.class);
+                intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());
+                intent.putExtra(RequestService.USER_NAME, model.getUserName());
+                intent.putExtra(RequestService.USER_PASSWORD, model.getUserPassword());
                 startService(intent);
             }
         });
 
-        broadcastReceiver = new ServerRequestBroadcastReceiver(this);
+        /*broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
-        registerReceiver(broadcastReceiver, intentFilter);
+        broadcastReceiver.register(getApplicationContext(), intentFilter);*/
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        unregisterReceiver(broadcastReceiver);
+        broadcastReceiver.unregister(getApplicationContext());
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+
+        progressConnect.hide();
+        connectBtn.setEnabled(true);
+
+        model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
+                userName.getText().toString(),
+                userPassword.getText().toString());
+        model.setUserRequestToServer(null);
+
+        //Log.d("payment", userName.getText().toString() + " " + userPassword.getText().toString());
 
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
-        registerReceiver(broadcastReceiver, intentFilter);
+        broadcastReceiver.register(getApplicationContext(), intentFilter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        unregisterReceiver(broadcastReceiver);
+        broadcastReceiver.unregister(getApplicationContext());
     }
 
     @Override
@@ -95,10 +111,8 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
 
     @Override
     public void sendConnectConfirmation() {
-        connectBtn.setEnabled(true);
-        progressConnect.hide();
-
-        Toast.makeText(getApplicationContext(), "connection confirm", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), DataBasesListActivity.class);
+        startActivity(intent);
     }
 
     @Override

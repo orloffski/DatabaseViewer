@@ -1,8 +1,8 @@
 package by.madcat.development.databaseviewer.ConnectData;
 
-import java.util.Properties;
-
 public class ConnectModel {
+
+    public static final String CONNECTION_STRING = "jdbc:jtds:sqlserver://";
 
     private String serverIpAdress;
     private String userName;
@@ -19,19 +19,11 @@ public class ConnectModel {
 
     public static ConnectModel getInstance(String serverIpAdress, String userName, String userPassword){
         if(instance == null){
+
             instance = new ConnectModel(serverIpAdress, userName, userPassword);
         }
 
         return instance;
-    }
-
-    public String getConnectString(){
-        Properties props = new Properties();
-        props.setProperty("user", instance.userName);
-        props.setProperty("password", instance.userPassword);
-        props.setProperty("socketTimeout", "2000");
-
-        return "jdbc:jtds:sqlserver://" + instance.serverIpAdress + ";" + props;
     }
 
     public String getUserRequestToServer() {

@@ -21,11 +21,14 @@ public class RequestService extends Service {
     public static final String SERVER_IP_ADRESS = "server_ip_adress";
     public static final String USER_NAME = "user_name";
     public static final String USER_PASSWORD = "user_password";
+    public static final String EXECUTE_MODEL = "execute_model";
 
     private boolean isError;
     private String errorMessage;
     private ResultSet resultSet;
     private Intent receiveIntent;
+
+    private boolean executeGetResult;
 
     private ConnectModel model;
 
@@ -45,6 +48,8 @@ public class RequestService extends Service {
             model = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
                     intent.getStringExtra(USER_NAME),
                     intent.getStringExtra(USER_PASSWORD));
+
+            executeGetResult = intent.getBooleanExtra(EXECUTE_MODEL, true);
 
             new AsyncTaskRequest().execute();
         }
@@ -66,6 +71,8 @@ public class RequestService extends Service {
             DbConn = null;
             statement = null;
             resultSet = null;
+
+            jsonArrayString = null;
         }
 
         @Override
@@ -76,8 +83,12 @@ public class RequestService extends Service {
 
                 if(DbConn != null && model.getUserRequestToServer() != null){
                     statement = DbConn.createStatement();
-                    resultSet = statement.executeQuery(model.getUserRequestToServer());
-                    jsonArrayString = SqlJsonUtils.createJsonArrayFromResultSet(resultSet).toString();
+                    if(executeGetResult) {
+                        resultSet = statement.executeQuery(model.getUserRequestToServer());
+                        jsonArrayString = SqlJsonUtils.createJsonArrayFromResultSet(resultSet).toString();
+                    }else{
+                        statement.executeUpdate(model.getUserRequestToServer());
+                    }
                 }
             } catch (Exception e) {
                 if(e instanceof SQLException){
@@ -115,7 +126,7 @@ public class RequestService extends Service {
                     ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_ERROR);
             receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_DATA, errorMessage);
         }else{
-            if(resultSet != null){
+            if(jsonArrayString != null){
                 // send data from server
                 try {
                     receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
@@ -123,12 +134,12 @@ public class RequestService extends Service {
                     receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_DATA, jsonArrayString);
                 } catch (Exception e) {
                     // for Google Analytics
+
                 }
             }else{
                 // send confirmation connection
                 receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
                         ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_CONNECT);
-
             }
         }
         sendBroadcast(receiveIntent);

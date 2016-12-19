@@ -2,7 +2,6 @@ package by.madcat.development.databaseviewer;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +15,7 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
-public class LoginActivity extends AppCompatActivity implements DataReceiver{
+public class LoginActivityApplicationActivity extends AbstractActivityApplicationActivity implements DataReceiver{
 
     private Button connectBtn;
     private AVLoadingIndicatorView progressConnect;
@@ -24,8 +23,6 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
     private TextView serverIpAdress;
     private TextView userName;
     private TextView userPassword;
-
-    private ServerRequestBroadcastReceiver broadcastReceiver;
 
     private ConnectModel model;
 
@@ -35,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
         setContentView(R.layout.activity_login);
 
         progressConnect = (AVLoadingIndicatorView)findViewById(R.id.progressConnect);
-        //progressConnect.hide();
 
         connectName = (TextView)findViewById(R.id.connectName);
         serverIpAdress = (TextView)findViewById(R.id.serverIpAdress);
@@ -49,34 +45,18 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
                 progressConnect.show();
                 connectBtn.setEnabled(false);
 
-                //Log.d("payment", model.getUserName() + " " + model.getUserPassword());
-
-                /*ConnectModel model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
-                        userName.getText().toString(),
-                        userPassword.getText().toString());*/
-
-                Intent intent = new Intent(LoginActivity.this, RequestService.class);
+                Intent intent = new Intent(LoginActivityApplicationActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, model.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, model.getUserPassword());
+                intent.putExtra(RequestService.EXECUTE_MODEL, false);
                 startService(intent);
             }
         });
-
-        /*broadcastReceiver = new ServerRequestBroadcastReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
-        broadcastReceiver.register(getApplicationContext(), intentFilter);*/
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        broadcastReceiver.unregister(getApplicationContext());
-    }
-
-    @Override
-    protected void onStart() {
+    protected void onResume() {
         super.onStart();
 
         progressConnect.hide();
@@ -87,18 +67,9 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
                 userPassword.getText().toString());
         model.setUserRequestToServer(null);
 
-        //Log.d("payment", userName.getText().toString() + " " + userPassword.getText().toString());
-
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
         broadcastReceiver.register(getApplicationContext(), intentFilter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        broadcastReceiver.unregister(getApplicationContext());
     }
 
     @Override
@@ -111,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements DataReceiver{
 
     @Override
     public void sendConnectConfirmation() {
-        Intent intent = new Intent(getApplicationContext(), DataBasesListActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DataBasesListActivityApplicationActivity.class);
         startActivity(intent);
     }
 

@@ -46,10 +46,10 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
                         switch (item.getItemId()) {
                             case R.id.action_edit:
-                                Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Edit " + holder.database_name.getText().toString(), Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.action_delete:
-                                Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Delete " + holder.database_name.getText().toString(), Toast.LENGTH_SHORT).show();
                                 return true;
                             default:
                         }

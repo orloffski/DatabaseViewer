@@ -2,10 +2,11 @@ package by.madcat.development.databaseviewer;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -20,13 +21,13 @@ import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
 
-public class DataBasesListActivity extends AppCompatActivity implements DataReceiver {
+public class DataBasesListActivityApplicationActivity extends AbstractActivityApplicationActivity implements DataReceiver {
 
     private RecyclerView databasesList;
     private RecyclerViewListAdapter adapter;
     private ArrayList<String> databases;
 
-    private ServerRequestBroadcastReceiver broadcastReceiver;
+    private FloatingActionButton databaseAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +47,19 @@ public class DataBasesListActivity extends AppCompatActivity implements DataRece
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
         broadcastReceiver.register(getApplicationContext(), intentFilter);
 
+        databaseAdd = (FloatingActionButton) findViewById(R.id.database_add);
+        databaseAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = AddEditDatabaseActivityApplicationActivity.getIntent(
+                        getApplicationContext(),
+                        AddEditDatabaseActivityApplicationActivity.DATABASE_ADD,
+                        "");
+                startActivity(intent);
+            }
+        });
+
         loadDatabasesList();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        broadcastReceiver.unregister(getApplicationContext());
     }
 
     @Override
@@ -65,18 +71,12 @@ public class DataBasesListActivity extends AppCompatActivity implements DataRece
         broadcastReceiver.register(getApplicationContext(), intentFilter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        broadcastReceiver.unregister(getApplicationContext());
-    }
-
     private void loadDatabasesList(){
         ConnectModel model = ConnectModel.getInstance("", "", "");
         model.setUserRequestToServer(QueriesList.DATABASES_LIST_QUERY);
 
-        Intent intent = new Intent(DataBasesListActivity.this, RequestService.class);
+        Intent intent = new Intent(DataBasesListActivityApplicationActivity.this, RequestService.class);
+        intent.putExtra(RequestService.EXECUTE_MODEL, true);
         startService(intent);
     }
 

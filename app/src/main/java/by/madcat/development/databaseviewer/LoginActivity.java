@@ -15,7 +15,7 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
-public class LoginActivity extends AbstractApplicationActivity implements DataReceiver{
+public class LoginActivity extends AbstractApplicationActivity implements DataReceiver {
 
     private Button connectBtn;
     private AVLoadingIndicatorView progressConnect;
@@ -49,10 +49,12 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, model.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, model.getUserPassword());
-                intent.putExtra(RequestService.EXECUTE_MODEL, false);
+                intent.putExtra(RequestService.EXECUTE_MODEL, 0);
                 startService(intent);
             }
         });
+
+        setTitle("Database viewer v.1.0");
     }
 
     @Override
@@ -77,7 +79,7 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
         progressConnect.hide();
         connectBtn.setEnabled(true);
 
-        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -88,6 +90,11 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
 
     @Override
     public void sendDataFromServer(String jsonArrayData) {
+
+    }
+
+    @Override
+    public void sendQueryExecutedNoResult() {
 
     }
 }

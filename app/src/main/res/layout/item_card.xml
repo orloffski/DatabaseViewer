@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/database_name"
+                android:id="@+id/text_view_for_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
@@ -33,7 +33,7 @@
                 android:layout_width="20dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/database_name"
+                android:layout_below="@id/text_view_for_name"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:scaleType="centerCrop"

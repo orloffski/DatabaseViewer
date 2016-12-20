@@ -12,6 +12,7 @@ public class ServerRequestBroadcastReceiver extends BroadcastReceiver{
     public static final int BROADCASTRECEIVER_STATUS_ERROR = 0;
     public static final int BROADCASTRECEIVER_STATUS_CONNECT = 1;
     public static final int BROADCASTRECEIVER_STATUS_SEND_DATA = 2;
+    public static final int BROADCASTRECEIVER_STATUS_QUERY_EXEC = 3;
 
     public static final String BROADCASTRECEIVER_DATA = "broadcastreceiver_data";
     public static final String BROADCASTRECEIVER_STATUS = "broadcastreceiver_status";
@@ -41,6 +42,9 @@ public class ServerRequestBroadcastReceiver extends BroadcastReceiver{
                 break;
             case BROADCASTRECEIVER_STATUS_SEND_DATA:
                 this.dataReceiver.sendDataFromServer(jsonArrayData);
+                break;
+            case BROADCASTRECEIVER_STATUS_QUERY_EXEC:
+                this.dataReceiver.sendQueryExecutedNoResult();
                 break;
         }
     }

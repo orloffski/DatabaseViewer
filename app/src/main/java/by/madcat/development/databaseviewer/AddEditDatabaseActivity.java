@@ -47,9 +47,13 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
 
         connectModel = ConnectModel.getInstance("", "", "");
 
-        databaseName = (EditText)findViewById(R.id.database_name);
-        if(action == DATABASE_EDIT)
+        databaseName = (EditText)findViewById(R.id.text_view_for_name);
+        if(action == DATABASE_EDIT) {
             databaseName.setText(dbName);
+            setTitle("Edit database '" + dbName + "'");
+        }else{
+            setTitle("Create new database");
+        }
 
         saveButton = (Button)findViewById(R.id.save_btn);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +63,7 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
-                intent.putExtra(RequestService.EXECUTE_MODEL, false);
+                intent.putExtra(RequestService.EXECUTE_MODEL, 1);
 
                 switch (action){
                     case DATABASE_ADD:
@@ -87,11 +91,21 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
 
     @Override
     public void sendErrorMessage(String errorMessage) {
-        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void sendConnectConfirmation() {
+
+    }
+
+    @Override
+    public void sendDataFromServer(String jsonArrayData) {
+
+    }
+
+    @Override
+    public void sendQueryExecutedNoResult() {
         switch (action){
             case DATABASE_ADD:
                 Toast.makeText(getApplicationContext(),
@@ -103,10 +117,5 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
                 break;
         }
         this.finish();
-    }
-
-    @Override
-    public void sendDataFromServer(String jsonArrayData) {
-
     }
 }

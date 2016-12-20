@@ -60,6 +60,8 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
         });
 
         loadDatabasesList();
+
+        setTitle("Databases list of MS SQL server on " + ConnectModel.getInstance("", "", "").getServerIpAdress());
     }
 
     @Override
@@ -78,17 +80,22 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
         model.setUserRequestToServer(QueriesList.DATABASES_LIST_QUERY);
 
         Intent intent = new Intent(DataBasesListActivity.this, RequestService.class);
-        intent.putExtra(RequestService.EXECUTE_MODEL, true);
+        intent.putExtra(RequestService.EXECUTE_MODEL, 2);
         startService(intent);
     }
 
     @Override
     public void sendErrorMessage(String errorMessage) {
-        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void sendConnectConfirmation() {
+
+    }
+
+    @Override
+    public void sendQueryExecutedNoResult() {
         loadDatabasesList();
     }
 

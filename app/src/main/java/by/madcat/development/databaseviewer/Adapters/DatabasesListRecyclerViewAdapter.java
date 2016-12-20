@@ -3,13 +3,8 @@ package by.madcat.development.databaseviewer.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,27 +12,27 @@ import by.madcat.development.databaseviewer.AddEditDatabaseActivity;
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.TablesListActivity;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
 
-public class DatabasesListRecyclerViewAdapter extends RecyclerView.Adapter<DatabasesListRecyclerViewAdapter.ViewHolder> {
+public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 
-    private ArrayList<String> databases;
-    private Context context;
-
-    public DatabasesListRecyclerViewAdapter(ArrayList<String> databases, Context context){
-        this.databases = databases;
+    public DatabasesListRecyclerViewAdapter(ArrayList<String> namesList, Context context){
+        this.namesList = namesList;
         this.context = context;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
-        return new ViewHolder(view);
-    }
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.text_view_for_name.setText(this.namesList.get(position));
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.database_name.setText(this.databases.get(position));
+        holder.text_view_for_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = TablesListActivity.getIntent(context, namesList.get(position));
+                context.startActivity(intent);
+            }
+        });
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,19 +50,19 @@ public class DatabasesListRecyclerViewAdapter extends RecyclerView.Adapter<Datab
                                 intent = AddEditDatabaseActivity.getIntent(
                                         context,
                                         AddEditDatabaseActivity.DATABASE_EDIT,
-                                        holder.database_name.getText().toString());
+                                        holder.text_view_for_name.getText().toString());
                                 context.startActivity(intent);
                                 return true;
                             case R.id.action_delete:
                                 ConnectModel connectModel = ConnectModel.getInstance("", "", "");
                                 connectModel.setUserRequestToServer(QueriesList.DATABASE_DELETE +
-                                        holder.database_name.getText().toString());
+                                        holder.text_view_for_name.getText().toString());
 
                                 intent = new Intent(context, RequestService.class);
                                 intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
                                 intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
                                 intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
-                                intent.putExtra(RequestService.EXECUTE_MODEL, false);
+                                intent.putExtra(RequestService.EXECUTE_MODEL, 1);
                                 context.startService(intent);
 
                                 return true;
@@ -78,24 +73,8 @@ public class DatabasesListRecyclerViewAdapter extends RecyclerView.Adapter<Datab
                 });
                 popup.show();
             }
+
+
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return (this.databases != null) ? this.databases.size() : 0;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        TextView database_name;
-        ImageView overflow;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            database_name = (TextView)itemView.findViewById(R.id.database_name);
-            overflow = (ImageView) itemView.findViewById(R.id.overflow);
-        }
     }
 }

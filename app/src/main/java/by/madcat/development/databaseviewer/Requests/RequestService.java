@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,13 +23,16 @@ public class RequestService extends Service {
     public static final String USER_NAME = "user_name";
     public static final String USER_PASSWORD = "user_password";
     public static final String EXECUTE_MODEL = "execute_model";
+    // 0 - connect
+    // 1 - exec query no resultset
+    // 2 - get resultset
 
     private boolean isError;
     private String errorMessage;
     private ResultSet resultSet;
     private Intent receiveIntent;
 
-    private boolean executeGetResult;
+    private int executeGetResult;
 
     private ConnectModel model;
 
@@ -49,7 +53,7 @@ public class RequestService extends Service {
                     intent.getStringExtra(USER_NAME),
                     intent.getStringExtra(USER_PASSWORD));
 
-            executeGetResult = intent.getBooleanExtra(EXECUTE_MODEL, true);
+            executeGetResult = intent.getIntExtra(EXECUTE_MODEL, 0);
 
             new AsyncTaskRequest().execute();
         }
@@ -83,7 +87,7 @@ public class RequestService extends Service {
 
                 if(DbConn != null && model.getUserRequestToServer() != null){
                     statement = DbConn.createStatement();
-                    if(executeGetResult) {
+                    if(executeGetResult == 2) {
                         resultSet = statement.executeQuery(model.getUserRequestToServer());
                         jsonArrayString = SqlJsonUtils.createJsonArrayFromResultSet(resultSet).toString();
                     }else{
@@ -137,9 +141,15 @@ public class RequestService extends Service {
 
                 }
             }else{
-                // send confirmation connection
-                receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
-                        ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_CONNECT);
+                if(executeGetResult == 0) {
+                    // send confirmation connection
+                    receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
+                            ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_CONNECT);
+                }else if(executeGetResult == 1){
+                    // send confirmation query execute
+                    receiveIntent.putExtra(ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS,
+                            ServerRequestBroadcastReceiver.BROADCASTRECEIVER_STATUS_QUERY_EXEC);
+                }
             }
         }
         sendBroadcast(receiveIntent);

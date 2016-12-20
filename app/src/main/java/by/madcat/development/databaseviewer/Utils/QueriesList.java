@@ -10,5 +10,5 @@ public class QueriesList {
     // delete database
     public static final String DATABASE_DELETE = "DROP DATABASE ";
     // get all tables from selected database
-    public static final String TABLES_LIST_QUERY = "SELECT * FROM sys.tables WHERE type_desc = '%s'";
+    public static final String TABLES_LIST_QUERY = "Use %s SELECT Name FROM dbo.sysobjects WHERE (xtype = 'U')";
 }

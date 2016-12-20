@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/database_name"
+        android:id="@+id/text_view_for_name"
         android:hint="input database name"/>
 
     <Button

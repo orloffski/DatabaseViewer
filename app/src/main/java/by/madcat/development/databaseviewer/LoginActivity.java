@@ -15,7 +15,7 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
-public class LoginActivityApplicationActivity extends AbstractActivityApplicationActivity implements DataReceiver{
+public class LoginActivity extends AbstractApplicationActivity implements DataReceiver{
 
     private Button connectBtn;
     private AVLoadingIndicatorView progressConnect;
@@ -45,7 +45,7 @@ public class LoginActivityApplicationActivity extends AbstractActivityApplicatio
                 progressConnect.show();
                 connectBtn.setEnabled(false);
 
-                Intent intent = new Intent(LoginActivityApplicationActivity.this, RequestService.class);
+                Intent intent = new Intent(LoginActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, model.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, model.getUserPassword());
@@ -82,7 +82,7 @@ public class LoginActivityApplicationActivity extends AbstractActivityApplicatio
 
     @Override
     public void sendConnectConfirmation() {
-        Intent intent = new Intent(getApplicationContext(), DataBasesListActivityApplicationActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DataBasesListActivity.class);
         startActivity(intent);
     }
 

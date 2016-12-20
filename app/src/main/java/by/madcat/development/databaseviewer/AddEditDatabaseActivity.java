@@ -15,7 +15,7 @@ import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
 
-public class AddEditDatabaseActivityApplicationActivity extends AbstractActivityApplicationActivity implements DataReceiver {
+public class AddEditDatabaseActivity extends AbstractApplicationActivity implements DataReceiver {
 
     public static final String DATABASE_ACTION = "database_action";
     public static final String DATABASE_NAME = "database_name";
@@ -31,7 +31,7 @@ public class AddEditDatabaseActivityApplicationActivity extends AbstractActivity
     private Button saveButton;
 
     public static Intent getIntent(Context context, int databaseAction, String databaseName){
-        Intent intent = new Intent(context, AddEditDatabaseActivityApplicationActivity.class);
+        Intent intent = new Intent(context, AddEditDatabaseActivity.class);
         intent.putExtra(DATABASE_ACTION, databaseAction);
         intent.putExtra(DATABASE_NAME, databaseName);
         return intent;
@@ -55,7 +55,7 @@ public class AddEditDatabaseActivityApplicationActivity extends AbstractActivity
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddEditDatabaseActivityApplicationActivity.this, RequestService.class);
+                Intent intent = new Intent(AddEditDatabaseActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());

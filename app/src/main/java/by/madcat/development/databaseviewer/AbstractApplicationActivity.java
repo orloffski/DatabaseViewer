@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 
-public abstract class AbstractActivityApplicationActivity extends AppCompatActivity {
+public abstract class AbstractApplicationActivity extends AppCompatActivity {
 
     protected ServerRequestBroadcastReceiver broadcastReceiver;
 

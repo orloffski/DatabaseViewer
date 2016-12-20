@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivityApplicationActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -24,9 +24,11 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".DataBasesListActivityApplicationActivity">
+        <activity android:name=".DataBasesListActivity">
         </activity>
-        <activity android:name=".AddEditDatabaseActivityApplicationActivity">
+        <activity android:name=".AddEditDatabaseActivity">
+        </activity>
+        <activity android:name=".TablesListActivity">
         </activity>
     </application>
 

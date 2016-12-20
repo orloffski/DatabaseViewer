@@ -10,23 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.AddEditDatabaseActivityApplicationActivity;
+import by.madcat.development.databaseviewer.AddEditDatabaseActivity;
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
-import by.madcat.development.databaseviewer.DataBasesListActivityApplicationActivity;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
 
-public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewListAdapter.ViewHolder> {
+public class DatabasesListRecyclerViewAdapter extends RecyclerView.Adapter<DatabasesListRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<String> databases;
     private Context context;
 
-    public RecyclerViewListAdapter(ArrayList<String> databases, Context context){
+    public DatabasesListRecyclerViewAdapter(ArrayList<String> databases, Context context){
         this.databases = databases;
         this.context = context;
     }
@@ -54,9 +52,9 @@ public class RecyclerViewListAdapter extends RecyclerView.Adapter<RecyclerViewLi
 
                         switch (item.getItemId()) {
                             case R.id.action_edit:
-                                intent = AddEditDatabaseActivityApplicationActivity.getIntent(
+                                intent = AddEditDatabaseActivity.getIntent(
                                         context,
-                                        AddEditDatabaseActivityApplicationActivity.DATABASE_EDIT,
+                                        AddEditDatabaseActivity.DATABASE_EDIT,
                                         holder.database_name.getText().toString());
                                 context.startActivity(intent);
                                 return true;

@@ -6,7 +6,7 @@
     android:id="@+id/activity_server_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="by.madcat.development.databaseviewer.LoginActivityApplicationActivity">
+    tools:context="by.madcat.development.databaseviewer.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"

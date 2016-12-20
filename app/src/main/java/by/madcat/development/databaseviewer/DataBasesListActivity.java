@@ -14,17 +14,17 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.Adapters.RecyclerViewListAdapter;
+import by.madcat.development.databaseviewer.Adapters.DatabasesListRecyclerViewAdapter;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
 
-public class DataBasesListActivityApplicationActivity extends AbstractActivityApplicationActivity implements DataReceiver {
+public class DataBasesListActivity extends AbstractApplicationActivity implements DataReceiver {
 
     private RecyclerView databasesList;
-    private RecyclerViewListAdapter adapter;
+    private DatabasesListRecyclerViewAdapter adapter;
     private ArrayList<String> databases;
 
     private FloatingActionButton databaseAdd;
@@ -39,7 +39,7 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
         databasesList.setHasFixedSize(true);
 
         databases = new ArrayList<>();
-        adapter = new RecyclerViewListAdapter(databases, this);
+        adapter = new DatabasesListRecyclerViewAdapter(databases, this);
 
         databasesList.setAdapter(adapter);
 
@@ -51,9 +51,9 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
         databaseAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddEditDatabaseActivityApplicationActivity.getIntent(
+                Intent intent = AddEditDatabaseActivity.getIntent(
                         getApplicationContext(),
-                        AddEditDatabaseActivityApplicationActivity.DATABASE_ADD,
+                        AddEditDatabaseActivity.DATABASE_ADD,
                         "");
                 startActivity(intent);
             }
@@ -77,7 +77,7 @@ public class DataBasesListActivityApplicationActivity extends AbstractActivityAp
         ConnectModel model = ConnectModel.getInstance("", "", "");
         model.setUserRequestToServer(QueriesList.DATABASES_LIST_QUERY);
 
-        Intent intent = new Intent(DataBasesListActivityApplicationActivity.this, RequestService.class);
+        Intent intent = new Intent(DataBasesListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, true);
         startService(intent);
     }

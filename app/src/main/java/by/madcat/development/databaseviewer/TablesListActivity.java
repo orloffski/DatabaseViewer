@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -30,6 +32,8 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
     private TablesListRecyclerViewAdapter adapter;
     private ArrayList<String> tables;
 
+    private FloatingActionButton tableAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +46,26 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
         tablesList.setHasFixedSize(true);
 
         tables = new ArrayList<>();
-        adapter = new TablesListRecyclerViewAdapter(tables, this);
+        adapter = new TablesListRecyclerViewAdapter(tables, this, databaseName);
 
         tablesList.setAdapter(adapter);
 
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
         broadcastReceiver.register(getApplicationContext(), intentFilter);
+
+        tableAdd = (FloatingActionButton)findViewById(R.id.table_add);
+        tableAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = AddEditTableActivity.getIntent(
+                        getApplicationContext(),
+                        AddEditTableActivity.TABLE_ADD,
+                        "",
+                        databaseName);
+                startActivity(intent);
+            }
+        });
 
         loadTablesList(this.databaseName);
 

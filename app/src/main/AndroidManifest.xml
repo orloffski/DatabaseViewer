@@ -30,6 +30,8 @@
         </activity>
         <activity android:name=".TablesListActivity">
         </activity>
+        <activity android:name=".AddEditTableActivity">
+        </activity>
     </application>
 
 </manifest>

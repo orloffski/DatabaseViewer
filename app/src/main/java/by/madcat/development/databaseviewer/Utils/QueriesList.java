@@ -11,4 +11,8 @@ public class QueriesList {
     public static final String DATABASE_DELETE = "DROP DATABASE ";
     // get all tables from selected database
     public static final String TABLES_LIST_QUERY = "Use %s SELECT Name FROM dbo.sysobjects WHERE (xtype = 'U')";
+    // delete table
+    public static final String TABLE_DELETE = "Use %s DROP TABLE %s";
+    // create table
+    public static final String TABLE_ADD = "Use %s CREATE TABLE %s (id INT, login TEXT, pass VARCHAR, PRIMARY KEY (id))";
 }

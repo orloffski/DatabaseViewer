@@ -3,8 +3,13 @@ package by.madcat.development.databaseviewer;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,7 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
     private TextView serverIpAdress;
     private TextView userName;
     private TextView userPassword;
+    private CheckBox passwordChb;
 
     private ConnectModel model;
 
@@ -37,6 +43,17 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
         serverIpAdress = (TextView)findViewById(R.id.serverIpAdress);
         userName = (TextView)findViewById(R.id.userName);
         userPassword = (TextView)findViewById(R.id.userPassword);
+
+        passwordChb = (CheckBox)findViewById(R.id.passwordChb);
+        passwordChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(passwordChb.isChecked())
+                    userPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                else
+                    userPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
 
         connectBtn = (Button)findViewById(R.id.connectBtn);
         connectBtn.setOnClickListener(new View.OnClickListener() {

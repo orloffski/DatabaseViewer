@@ -52,11 +52,17 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/userPassword"
                 android:hint="input user password"
-                android:text="xnuHZq2bHEX"/>
+                android:text="xnuHZq2bHEX"
+                android:inputType="textPassword"/>
+
+            <CheckBox
+                android:text="Show password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/passwordChb"/>
         </LinearLayout>
 
         <Button

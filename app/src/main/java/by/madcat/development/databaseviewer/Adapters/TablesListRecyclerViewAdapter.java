@@ -60,6 +60,7 @@ public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapt
                                         holder.text_view_for_name.getText().toString(),
                                         databaseName);
                                 context.startActivity(intent);
+
                                 return true;
                             case R.id.action_delete:
                                 ConnectModel connectModel = ConnectModel.getInstance("", "", "");

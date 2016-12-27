@@ -12,7 +12,28 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tableNameLinearLayout">
+        android:gravity="center_horizontal"
+        android:id="@+id/buttonLinearLayout">
+
+        <Button
+            android:text="Add field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_field_button"/>
+
+        <Button
+            android:text="Save Table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_button"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableNameLinearLayout"
+        android:layout_below="@+id/buttonLinearLayout">
 
         <TextView
             android:text="Table Name"
@@ -49,21 +70,6 @@
                 android:orientation="vertical"
                 android:id="@+id/fieldsLinearLayout"/>
         </ScrollView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_below="@+id/fieldsMainLinearLayout"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:text="Save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/save_button"/>
     </LinearLayout>
 
 </RelativeLayout>

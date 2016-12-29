@@ -62,8 +62,11 @@ public class ViewGenerator {
 
                 if(types[i].equals(SqlTypes.VARCHAR)){
                     fieldLinearLayout.getChildAt(1).setEnabled(true);
+                    ((EditText)fieldLinearLayout.getChildAt(1)).setHint("lenght");
                 }else{
+                    ((EditText)fieldLinearLayout.getChildAt(1)).setHint("");
                     fieldLinearLayout.getChildAt(1).setEnabled(false);
+
                 }
             }
 
@@ -122,9 +125,11 @@ public class ViewGenerator {
         EditText editText = (EditText) ((LinearLayout)view).getChildAt(0);
         editText.setText(field.getFieldName());
 
+        EditText length = (EditText) ((LinearLayout)view).getChildAt(1);
         if(types[position].equals(SqlTypes.VARCHAR)){
-            EditText length = (EditText) ((LinearLayout)view).getChildAt(1);
             length.setText(String.valueOf(field.getLength()));
+        }else{
+            length.setHint("");
         }
 
         Spinner spinnerTypes = (Spinner) ((LinearLayout)view).getChildAt(2);

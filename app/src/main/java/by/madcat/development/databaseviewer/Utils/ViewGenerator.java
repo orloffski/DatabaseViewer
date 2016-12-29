@@ -14,19 +14,25 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.SupportClasses.SqlTypes;
 
 public class ViewGenerator {
-    public static void generateNewFieldView(final Context context, final LinearLayout mainView){
+    public static void addNewFieldInMainView(final Context context, final LinearLayout mainView){
+        final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
+        int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
+        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
+
+        mainView.addView(generateNewFieldView(context, mainView), lParams);
+    }
+    public static View generateNewFieldView(final Context context, final LinearLayout mainView){
         final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
         int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
 
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
         final LinearLayout fieldLinearLayout = new LinearLayout(context);
-        mainView.addView(fieldLinearLayout, lParams);
 
         ViewGroup.LayoutParams editTextParams = new ViewGroup.LayoutParams(230, wrapContent);
         EditText fieldName = new EditText(context);
@@ -35,6 +41,16 @@ public class ViewGenerator {
         fieldName.setTextColor(Color.BLACK);
         fieldName.setPadding(0, 0, 10, 0);
         fieldLinearLayout.addView(fieldName, editTextParams);
+
+        ViewGroup.LayoutParams lenghtEditTextParams = new ViewGroup.LayoutParams(80, wrapContent);
+        EditText lenghtEditText = new EditText(context);
+        lenghtEditText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
+        lenghtEditText.setHint("lenght");
+        lenghtEditText.setHintTextColor(Color.BLUE);
+        lenghtEditText.setTextColor(Color.BLACK);
+        lenghtEditText.setPadding(0, 0, 10, 0);
+        lenghtEditText.setEnabled(false);
+        fieldLinearLayout.addView(lenghtEditText, lenghtEditTextParams);
 
         ViewGroup.LayoutParams spinnerParams = new ViewGroup.LayoutParams(180, wrapContent);
         Spinner typesSpinner = new Spinner(context);
@@ -45,17 +61,9 @@ public class ViewGenerator {
                 SqlTypes[] types = SqlTypes.values();
 
                 if(types[i].equals(SqlTypes.VARCHAR)){
-                    ViewGroup.LayoutParams lenghtEditTextParams = new ViewGroup.LayoutParams(80, wrapContent);
-                    EditText lenghtEditText = new EditText(context);
-                    lenghtEditText.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
-                    lenghtEditText.setHint("lenght");
-                    lenghtEditText.setHintTextColor(Color.BLUE);
-                    lenghtEditText.setTextColor(Color.BLACK);
-                    lenghtEditText.setPadding(0, 0, 10, 0);
-                    fieldLinearLayout.addView(lenghtEditText, 2, lenghtEditTextParams);
+                    fieldLinearLayout.getChildAt(1).setEnabled(true);
                 }else{
-                    if(fieldLinearLayout.getChildAt(2) instanceof EditText)
-                        fieldLinearLayout.removeView(fieldLinearLayout.getChildAt(2));
+                    fieldLinearLayout.getChildAt(1).setEnabled(false);
                 }
             }
 
@@ -85,15 +93,41 @@ public class ViewGenerator {
         });
 
         fieldLinearLayout.addView(deleteFieldButton, deleteButtonParams);
+
+        return fieldLinearLayout;
     }
+    public static void addIssetFieldsInMainView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
+        ArrayList<View> views = generateIssetFieldsView(context, mainView, fieldsArrayList);
 
-    public static View generateIssetFieldView(Context context, Types type){
-        View view = new LinearLayout(context);
-
-        return view;
+        for(View view : views)
+            mainView.addView(view);
     }
+    public static ArrayList<View> generateIssetFieldsView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
+        ArrayList<View> views = new ArrayList<>();
 
-    public static View updateFieldView(Context context, Types newType, View oldView){
-        return oldView;
+        for(TableMetadataModel.Fields field : fieldsArrayList){
+            View view = generateNewFieldView(context, mainView);
+
+            fillValuesInFields(view, field);
+
+            views.add(view);
+        }
+
+        return views;
+    }
+    private static void fillValuesInFields(View view, TableMetadataModel.Fields field){
+        SqlTypes[] types = SqlTypes.values();
+        int position = Arrays.binarySearch(types, field.getType());
+
+        EditText editText = (EditText) ((LinearLayout)view).getChildAt(0);
+        editText.setText(field.getFieldName());
+
+        if(types[position].equals(SqlTypes.VARCHAR)){
+            EditText length = (EditText) ((LinearLayout)view).getChildAt(1);
+            length.setText(String.valueOf(field.getLength()));
+        }
+
+        Spinner spinnerTypes = (Spinner) ((LinearLayout)view).getChildAt(2);
+        spinnerTypes.setSelection(position);
     }
 }

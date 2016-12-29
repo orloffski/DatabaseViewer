@@ -13,13 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesList;
+import by.madcat.development.databaseviewer.Utils.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
-import by.madcat.development.databaseviewer.SupportClasses.*;
 
 public class AddEditTableActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -40,6 +44,9 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
     private Button saveButton;
     private Button addFieldButton;
     private LinearLayout fieldsLinearLayout;
+
+    private TableMetadataModel oldTable;
+    private TableMetadataModel newTable;
 
     public static Intent getIntent(Context context, int tableAction, String tableName, String dbName){
         Intent intent = new Intent(context, AddEditTableActivity.class);
@@ -91,11 +98,15 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         addFieldButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewGenerator.generateNewFieldView(getApplicationContext(), fieldsLinearLayout);
+                ViewGenerator.addNewFieldInMainView(getApplicationContext(), fieldsLinearLayout);
             }
         });
 
         setTitle(action);
+
+        if(action == TABLE_EDIT){
+            getTableMetadata();
+        }
     }
 
     @Override
@@ -127,18 +138,17 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             stringBuilder.append(fieldName).append(" ");
 
             SqlTypes[] types = SqlTypes.values();
-            int position = ((Spinner)field.getChildAt(1)).getSelectedItemPosition();
+            int position = ((Spinner)field.getChildAt(2)).getSelectedItemPosition();
             String fieldType = types[position].toString();
             if(types[position].equals(SqlTypes.VARCHAR)){
-                if(((CheckBox)field.getChildAt(3)).isChecked())
-                    primaryKey = String.format(QueriesList.TABLE_EDIT_PRIMARY_KEY, fieldName);
-                int length = Integer.parseInt(((EditText)field.getChildAt(2)).getText().toString());
+                int length = Integer.parseInt(((EditText)field.getChildAt(1)).getText().toString());
                 stringBuilder.append(fieldType).append("(").append(String.valueOf(length)).append(")");
             }else{
-                if(((CheckBox)field.getChildAt(2)).isChecked())
-                    primaryKey = String.format(QueriesList.TABLE_EDIT_PRIMARY_KEY, fieldName);
                 stringBuilder.append(fieldType);
             }
+
+            if(((CheckBox)field.getChildAt(3)).isChecked())
+                primaryKey = String.format(QueriesList.TABLE_EDIT_PRIMARY_KEY, fieldName);
 
             if(i != fieldsLinearLayoutCount - 1 || !primaryKey.equals(""))
                 stringBuilder.append(", ");
@@ -151,6 +161,42 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         connectModel.setUserRequestToServer(
                 String.format(QueriesList.TABLE_ADD, dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
         }
+
+    private void getTableMetadata(){
+        Intent intent = new Intent(AddEditTableActivity.this, RequestService.class);
+        intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
+        intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
+        intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
+        intent.putExtra(RequestService.EXECUTE_MODEL, 2);
+
+        connectModel.setUserRequestToServer(
+                String.format(QueriesList.TABLE_METADATA, dbName, tableName));
+
+        startService(intent);
+    }
+
+    public void createOldTableMetadata(String jsonArrayData){
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayData);
+            oldTable = new TableMetadataModel(tableName);
+
+            for(int i = 0; i < jsonArray.length(); i++){
+                String fieldName = jsonArray.getJSONObject(i).getString("COLUMN_NAME").toString();
+                SqlTypes type = SqlTypes.valueOf(jsonArray.getJSONObject(i).getString("DATA_TYPE").toString().toUpperCase());
+                int length = jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString().equals("") ? 0 :
+                        Integer.parseInt(jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString());
+
+                oldTable.addNewField(fieldName, type, length);
+            }
+            createIssetFields();
+        } catch (JSONException e) {
+            // for Google Analytics
+        }
+    }
+
+    public void createIssetFields(){
+        ViewGenerator.addIssetFieldsInMainView(getApplicationContext(), fieldsLinearLayout, oldTable.getFieldsList());
+    }
 
     @Override
     protected void onResume() {
@@ -173,7 +219,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
     @Override
     public void sendDataFromServer(String jsonArrayData) {
-
+        createOldTableMetadata(jsonArrayData);
     }
 
     @Override

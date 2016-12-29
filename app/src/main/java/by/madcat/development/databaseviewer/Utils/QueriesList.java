@@ -15,6 +15,8 @@ public class QueriesList {
     public static final String TABLE_DELETE = "Use %s DROP TABLE %s";
     // create table (table name 2%s in db name 1%s where fields string 3%s)
     public static final String TABLE_ADD = "Use %s CREATE TABLE %s (%s)";
+    // get table metadata (get metadata from table 2%s in database 1%s)
+    public static final String TABLE_METADATA = "Use %s SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS where table_name = '%s'";
     // edit table
     public static final String TABLE_EDIT = "Use %s ALTER TABLE %s";
     public static final String TABLE_EDIT_NAME = " RENAME %s"; // rename table to newName %s

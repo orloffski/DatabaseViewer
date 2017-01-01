@@ -234,7 +234,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             else
                 primaryKey = false;
 
-            newTable.addNewField(fieldName, fieldType, length);
+            newTable.addNewField(fieldName, fieldType, length, primaryKey);
         }
     }
 
@@ -297,8 +297,11 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                 SqlTypes type = SqlTypes.valueOf(jsonArray.getJSONObject(i).getString("DATA_TYPE").toString().toUpperCase());
                 int length = jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString().equals("") ? 0 :
                         Integer.parseInt(jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString());
+                String PK = jsonArray.getJSONObject(i).getString("ORDINAL_POSITION").toString();
 
-                oldTable.addNewField(fieldName, type, length);
+                boolean isKey = PK.equals("") ? false : true;
+
+                oldTable.addNewField(fieldName, type, length, isKey);
             }
             createIssetFields();
         } catch (JSONException e) {

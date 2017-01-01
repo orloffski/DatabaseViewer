@@ -134,5 +134,8 @@ public class ViewGenerator {
 
         Spinner spinnerTypes = (Spinner) ((LinearLayout)view).getChildAt(2);
         spinnerTypes.setSelection(position);
+
+        CheckBox primaryKey = (CheckBox) ((LinearLayout)view).getChildAt(3);
+        primaryKey.setChecked(field.isPrimaryKey());
     }
 }

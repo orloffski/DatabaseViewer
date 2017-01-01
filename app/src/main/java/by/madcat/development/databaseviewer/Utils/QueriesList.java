@@ -15,8 +15,12 @@ public class QueriesList {
     public static final String TABLE_DELETE = "Use %s DROP TABLE %s ";
     // create table (table name 2%s in db name 1%s where fields string 3%s)
     public static final String TABLE_ADD = "Use %s CREATE TABLE %s (%s)";
-    // get table metadata (get metadata from table 2%s in database 1%s)
-    public static final String TABLE_METADATA = "Use %s SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS where table_name = '%s'";
+    // get table metadata (get metadata from table 2%s in database 1%s, JOIN to get primary key in table)
+    public static final String TABLE_METADATA =
+            "Use %s SELECT data_table.COLUMN_NAME, data_table.DATA_TYPE, data_table.CHARACTER_MAXIMUM_LENGTH, keys_table.ORDINAL_POSITION " +
+            "FROM INFORMATION_SCHEMA.COLUMNS AS data_table " +
+            "LEFT OUTER JOIN information_schema.KEY_COLUMN_USAGE AS keys_table ON data_table.TABLE_NAME = keys_table.TABLE_NAME AND data_table.COLUMN_NAME = keys_table.COLUMN_NAME " +
+            "where data_table.table_name = '%s'";
     // edit table
     public static final String DB_SELECT = "Use %s;";
     public static final String TABLE_EDIT = "ALTER TABLE %s ";

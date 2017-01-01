@@ -13,8 +13,8 @@ public class TableMetadataModel {
         this.fieldsList = new ArrayList<>();
     }
 
-    public Fields addNewField(String fieldName, SqlTypes fieldType, int length){
-        Fields newField = new Fields(fieldName, fieldType, length);
+    public Fields addNewField(String fieldName, SqlTypes fieldType, int length, boolean isKey){
+        Fields newField = new Fields(fieldName, fieldType, length, isKey);
         this.fieldsList.add(newField);
         return newField;
     }
@@ -33,11 +33,11 @@ public class TableMetadataModel {
         private int length;
         private boolean primaryKey;
 
-        public Fields(String name, SqlTypes type, int length){
+        public Fields(String name, SqlTypes type, int length, boolean isKey){
             this.fieldName = name;
             this.type = type;
             this.length = length;
-            this.primaryKey = false;
+            this.primaryKey = isKey;
         }
 
         public String getFieldName() {

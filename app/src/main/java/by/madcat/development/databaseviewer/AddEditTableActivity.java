@@ -85,6 +85,10 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         createTable();
                         break;
                     case TABLE_EDIT:
+                        if(checkTableToEdit())
+                            createTransactionOfChanges();
+                        else
+                            finish();
 
                         break;
                 }
@@ -124,6 +128,114 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
     private void loadElements(){
         this.tableNameEditText.setText(tableName);
+    }
+
+    private boolean checkTableToEdit(){
+        createNewTableMetadata();
+
+        if(!oldTable.equals(newTable)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void createTransactionOfChanges(){
+        int counter;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(QueriesList.BEGIN_TRANSACTION);
+        stringBuilder.append(String.format(QueriesList.DB_SELECT, dbName));
+
+        if(!oldTable.getTableName().equals(newTable.getTableName()))
+            stringBuilder.append(String.format(QueriesList.TABLE_EDIT_NAME, tableName, newTable.getTableName()));
+
+        counter = oldTable.getFieldsList().size();
+
+        if(counter > newTable.getFieldsList().size()) {
+            counter = newTable.getFieldsList().size();
+        }
+
+        for(int i = 0; i < counter; i++){
+            if(!oldTable.getFieldsList().get(i).getFieldName().equals(newTable.getFieldsList().get(i).getFieldName())){
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_RENAME,
+                        newTable.getTableName(),
+                        oldTable.getFieldsList().get(i).getFieldName(),
+                        newTable.getFieldsList().get(i).getFieldName()));
+            }
+
+            if(!oldTable.getFieldsList().get(i).getType().equals(newTable.getFieldsList().get(i).getType())){
+                String type = "";
+                if(newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
+                    type = SqlTypes.VARCHAR.toString() + "(" + newTable.getFieldsList().get(i).getLength() + ")";
+                }else{
+                    type = newTable.getFieldsList().get(i).getType().toString();
+                }
+
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                        newTable.getTableName(),
+                        newTable.getFieldsList().get(i).getFieldName(),
+                        type));
+            }
+
+            if(oldTable.getFieldsList().get(i).getLength() != newTable.getFieldsList().get(i).getLength() && newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
+                String length = newTable.getFieldsList().get(i).getType().toString() +
+                        "(" +
+                        newTable.getFieldsList().get(i).getLength() +
+                        ")";
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                        newTable.getTableName(),
+                        newTable.getFieldsList().get(i).getFieldName(),
+                        length));
+            }
+        }
+
+        if(newTable.getFieldsList().size() < oldTable.getFieldsList().size()){
+            for(int i = counter; i < oldTable.getFieldsList().size(); i++){
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
+            }
+        }else{
+            for(int i = counter; i < newTable.getFieldsList().size(); i++){
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_ADD_FIELD,
+                        newTable.getFieldsList().get(i).getFieldName(),
+                        newTable.getFieldsList().get(i).getType()));
+            }
+        }
+
+        stringBuilder.append(QueriesList.COMMIT_TRANSACTION);
+
+        connectModel.setUserRequestToServer(stringBuilder.toString());
+    }
+
+    private void createNewTableMetadata(){
+        newTable = new TableMetadataModel(tableNameEditText.getText().toString());
+
+        int fieldsLinearLayoutCount = fieldsLinearLayout.getChildCount();
+
+        for(int i = 0; i < fieldsLinearLayoutCount; i++){
+            LinearLayout field = (LinearLayout) fieldsLinearLayout.getChildAt(i);
+
+            String fieldName = ((EditText)field.getChildAt(0)).getText().toString();
+
+            SqlTypes[] types = SqlTypes.values();
+            int position = ((Spinner)field.getChildAt(2)).getSelectedItemPosition();
+            String type = types[position].toString();
+            SqlTypes fieldType = SqlTypes.valueOf(type);
+
+            int length = 0;
+            if(types[position].equals(SqlTypes.VARCHAR))
+                length = ((EditText)field.getChildAt(1)).getText().toString().equals("") ? 0 : Integer.parseInt(((EditText)field.getChildAt(1)).getText().toString());
+
+            boolean primaryKey;
+            if(((CheckBox)field.getChildAt(3)).isChecked())
+                primaryKey = true;
+            else
+                primaryKey = false;
+
+            newTable.addNewField(fieldName, fieldType, length);
+        }
     }
 
     private void createTable(){

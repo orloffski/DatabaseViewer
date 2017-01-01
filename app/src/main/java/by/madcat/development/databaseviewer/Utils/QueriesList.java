@@ -20,14 +20,14 @@ public class QueriesList {
     // edit table
     public static final String DB_SELECT = "Use %s;";
     public static final String TABLE_EDIT = "ALTER TABLE %s ";
-    public static final String TABLE_EDIT_NAME = "EXEC sp_rename %s, %s; "; // rename table 1%s to newName 2%s
-    public static final String TABLE_EDIT_ADD_FIELD = "ADD %s %s; "; // add field name 1%s, type 2%s
-    public static final String TABLE_EDIT_CHANGE_FIELD_RENAME = "EXEC sp_RENAME '%s.%s', %s, 'COLUMN'";
+    public static final String TABLE_EDIT_NAME = "EXEC sp_rename %s, %s;"; // rename table 1%s to newName 2%s
+    public static final String TABLE_EDIT_ADD_FIELD = "ADD %s %s;;"; // add field name 1%s, type 2%s
+    public static final String TABLE_EDIT_CHANGE_FIELD_RENAME = "EXEC sp_RENAME '%s.%s', %s, 'COLUMN';";
     public static final String TABLE_EDIT_CHANGE_FIELD_TYPE = "ALTER TABLE %s ALTER COLUMN %s %s;";
     public static final String TABLE_EDIT_DELETE_FIELD = "DROP COLUMN %s;" ; // delete field name 1%s
     public static final String TABLE_EDIT_PRIMARY_KEY = "PRIMARY KEY (%s)"; // set primary key at 1%s field
 
     // transaction
-    public static final String BEGIN_TRANSACTION = "BEGIN TRANSACTION; ";
-    public static final String COMMIT_TRANSACTION = " COMMIT;";
+    public static final String BEGIN_TRANSACTION = "BEGIN TRANSACTION;";
+    public static final String COMMIT_TRANSACTION = "COMMIT;";
 }

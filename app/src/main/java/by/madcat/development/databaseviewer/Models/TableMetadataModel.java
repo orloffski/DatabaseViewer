@@ -1,8 +1,10 @@
-package by.madcat.development.databaseviewer.Utils;
+package by.madcat.development.databaseviewer.Models;
 
 import android.util.Log;
 
 import java.util.ArrayList;
+
+import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
 public class TableMetadataModel {
     private String tableName;

@@ -9,11 +9,11 @@ import android.view.View;
 import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.AddEditDatabaseActivity;
-import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.TablesListActivity;
-import by.madcat.development.databaseviewer.Utils.QueriesList;
+import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 
@@ -55,7 +55,7 @@ public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAd
                                 return true;
                             case R.id.action_delete:
                                 ConnectModel connectModel = ConnectModel.getInstance("", "", "");
-                                connectModel.setUserRequestToServer(QueriesList.DATABASE_DELETE +
+                                connectModel.setUserRequestToServer(MSSQLQueriesPartsList.DATABASE_DELETE +
                                         holder.text_view_for_name.getText().toString());
 
                                 intent = new Intent(context, RequestService.class);

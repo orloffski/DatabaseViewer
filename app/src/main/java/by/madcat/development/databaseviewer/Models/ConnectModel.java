@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer.ConnectData;
+package by.madcat.development.databaseviewer.Models;
 
 public class ConnectModel {
 
@@ -21,6 +21,18 @@ public class ConnectModel {
         if(instance == null){
 
             instance = new ConnectModel(serverIpAdress, userName, userPassword);
+        }
+
+        return instance;
+    }
+
+    public static ConnectModel updateInstance(String serverIpAdress, String userName, String userPassword){
+        if(instance == null){
+            instance = new ConnectModel(serverIpAdress, userName, userPassword);
+        }else{
+            instance.serverIpAdress = serverIpAdress;
+            instance.userName = userName;
+            instance.userPassword = userPassword;
         }
 
         return instance;

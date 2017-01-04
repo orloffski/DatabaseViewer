@@ -3,7 +3,6 @@ package by.madcat.development.databaseviewer.Utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +16,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 
 public class ViewGenerator {

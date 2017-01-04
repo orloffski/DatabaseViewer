@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,11 +17,11 @@ import org.json.JSONException;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
-import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesList;
+import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
-import by.madcat.development.databaseviewer.Utils.TableMetadataModel;
+import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
 public class AddEditTableActivity extends AbstractApplicationActivity implements DataReceiver {
@@ -144,11 +143,11 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         int counter;
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(QueriesList.BEGIN_TRANSACTION);
-        stringBuilder.append(String.format(QueriesList.DB_SELECT, dbName));
+        stringBuilder.append(MSSQLQueriesPartsList.BEGIN_TRANSACTION);
+        stringBuilder.append(String.format(MSSQLQueriesPartsList.DB_SELECT, dbName));
 
         if(!oldTable.getTableName().equals(newTable.getTableName()))
-            stringBuilder.append(String.format(QueriesList.TABLE_EDIT_NAME, tableName, newTable.getTableName()));
+            stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_NAME, tableName, newTable.getTableName()));
 
         counter = oldTable.getFieldsList().size();
 
@@ -158,7 +157,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
         for(int i = 0; i < counter; i++){
             if(!oldTable.getFieldsList().get(i).getFieldName().equals(newTable.getFieldsList().get(i).getFieldName())){
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_RENAME,
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_RENAME,
                         newTable.getTableName(),
                         oldTable.getFieldsList().get(i).getFieldName(),
                         newTable.getFieldsList().get(i).getFieldName()));
@@ -172,7 +171,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                     type = newTable.getFieldsList().get(i).getType().toString();
                 }
 
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
                         newTable.getTableName(),
                         newTable.getFieldsList().get(i).getFieldName(),
                         type));
@@ -183,7 +182,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         "(" +
                         newTable.getFieldsList().get(i).getLength() +
                         ")";
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
                         newTable.getTableName(),
                         newTable.getFieldsList().get(i).getFieldName(),
                         length));
@@ -192,19 +191,19 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
         if(newTable.getFieldsList().size() < oldTable.getFieldsList().size()){
             for(int i = counter; i < oldTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT, newTable.getTableName()));
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
             }
         }else{
             for(int i = counter; i < newTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT, newTable.getTableName()));
-                stringBuilder.append(String.format(QueriesList.TABLE_EDIT_ADD_FIELD,
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_ADD_FIELD,
                         newTable.getFieldsList().get(i).getFieldName(),
                         newTable.getFieldsList().get(i).getType()));
             }
         }
 
-        stringBuilder.append(QueriesList.COMMIT_TRANSACTION);
+        stringBuilder.append(MSSQLQueriesPartsList.COMMIT_TRANSACTION);
 
         connectModel.setUserRequestToServer(stringBuilder.toString());
     }
@@ -260,7 +259,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             }
 
             if(((CheckBox)field.getChildAt(3)).isChecked())
-                primaryKey = String.format(QueriesList.TABLE_EDIT_PRIMARY_KEY, fieldName);
+                primaryKey = String.format(MSSQLQueriesPartsList.TABLE_EDIT_PRIMARY_KEY, fieldName);
 
             if(i != fieldsLinearLayoutCount - 1 || !primaryKey.equals(""))
                 stringBuilder.append(", ");
@@ -271,7 +270,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
 
         connectModel.setUserRequestToServer(
-                String.format(QueriesList.TABLE_ADD, dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
+                String.format(MSSQLQueriesPartsList.TABLE_ADD, dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
         }
 
     private void getTableMetadata(){
@@ -282,7 +281,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
 
         connectModel.setUserRequestToServer(
-                String.format(QueriesList.TABLE_METADATA, dbName, tableName));
+                String.format(MSSQLQueriesPartsList.TABLE_METADATA, dbName, tableName));
 
         startService(intent);
     }

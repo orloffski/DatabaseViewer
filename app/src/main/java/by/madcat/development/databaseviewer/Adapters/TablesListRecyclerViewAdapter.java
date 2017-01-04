@@ -8,12 +8,11 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.AddEditDatabaseActivity;
 import by.madcat.development.databaseviewer.AddEditTableActivity;
-import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesList;
+import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 
@@ -64,7 +63,7 @@ public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapt
                                 return true;
                             case R.id.action_delete:
                                 ConnectModel connectModel = ConnectModel.getInstance("", "", "");
-                                connectModel.setUserRequestToServer(String.format(QueriesList.TABLE_DELETE,
+                                connectModel.setUserRequestToServer(String.format(MSSQLQueriesPartsList.TABLE_DELETE,
                                         databaseName, holder.text_view_for_name.getText().toString()));
 
                                 intent = new Intent(context, RequestService.class);

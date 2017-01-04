@@ -3,7 +3,6 @@ package by.madcat.development.databaseviewer;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
-import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
 public class LoginActivity extends AbstractApplicationActivity implements DataReceiver {
@@ -61,6 +60,11 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
             public void onClick(View view) {
                 progressConnect.show();
                 connectBtn.setEnabled(false);
+
+                model = ConnectModel.updateInstance(serverIpAdress.getText().toString(),
+                        userName.getText().toString(),
+                        userPassword.getText().toString());
+                model.setUserRequestToServer(null);
 
                 Intent intent = new Intent(LoginActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());

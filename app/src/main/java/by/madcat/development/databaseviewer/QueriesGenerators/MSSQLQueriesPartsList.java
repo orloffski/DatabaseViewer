@@ -1,6 +1,6 @@
-package by.madcat.development.databaseviewer.Utils;
+package by.madcat.development.databaseviewer.QueriesGenerators;
 
-public class QueriesList {
+public class MSSQLQueriesPartsList {
     // get all databases from sql server (without system db)
     public static final String DATABASES_LIST_QUERY = "SELECT name FROM master.dbo.sysdatabases WHERE dbid > 4";
     // create database

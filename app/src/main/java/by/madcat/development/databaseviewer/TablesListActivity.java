@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import by.madcat.development.databaseviewer.Adapters.TablesListRecyclerViewAdapter;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
-import by.madcat.development.databaseviewer.ConnectData.ConnectModel;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesList;
+import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class TablesListActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -91,7 +91,7 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
 
     private void loadTablesList(String databaseName){
         ConnectModel model = ConnectModel.getInstance("", "", "");
-        model.setUserRequestToServer(String.format(QueriesList.TABLES_LIST_QUERY, databaseName));
+        model.setUserRequestToServer(String.format(MSSQLQueriesPartsList.TABLES_LIST_QUERY, databaseName));
 
         Intent intent = new Intent(TablesListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);

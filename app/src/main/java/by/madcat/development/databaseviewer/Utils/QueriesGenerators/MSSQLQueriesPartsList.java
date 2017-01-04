@@ -19,7 +19,8 @@ public class MSSQLQueriesPartsList {
     public static final String TABLE_METADATA =
             "Use %s SELECT data_table.COLUMN_NAME, data_table.DATA_TYPE, data_table.CHARACTER_MAXIMUM_LENGTH, keys_table.ORDINAL_POSITION " +
             "FROM INFORMATION_SCHEMA.COLUMNS AS data_table " +
-            "LEFT OUTER JOIN information_schema.KEY_COLUMN_USAGE AS keys_table ON data_table.TABLE_NAME = keys_table.TABLE_NAME AND data_table.COLUMN_NAME = keys_table.COLUMN_NAME " +
+            "LEFT OUTER JOIN information_schema.KEY_COLUMN_USAGE AS keys_table " +
+            "ON data_table.TABLE_NAME = keys_table.TABLE_NAME AND data_table.COLUMN_NAME = keys_table.COLUMN_NAME AND keys_table.CONSTRAINT_NAME LIKE 'PK%' " +
             "where data_table.table_name = '%s'";
     // edit table
     public static final String DB_SELECT = "Use %s;";

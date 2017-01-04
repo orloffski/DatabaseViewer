@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer.QueriesGenerators;
+package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
 
 public class MSSQLQueriesPartsList {
     // get all databases from sql server (without system db)

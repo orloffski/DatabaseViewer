@@ -12,8 +12,8 @@ import android.widget.Toast;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class AddEditDatabaseActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -67,11 +67,10 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
 
                 switch (action){
                     case DATABASE_ADD:
-                        connectModel.setUserRequestToServer(MSSQLQueriesPartsList.DATABASE_ADD + databaseName.getText().toString());
+                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.createDatabase(databaseName.getText().toString()));
                         break;
                     case DATABASE_EDIT:
-                        connectModel.setUserRequestToServer(
-                                String.format(MSSQLQueriesPartsList.DATABASE_EDIT, dbName, databaseName.getText().toString()));
+                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.renameDatabase(dbName, databaseName.getText().toString()));
                         break;
                 }
 

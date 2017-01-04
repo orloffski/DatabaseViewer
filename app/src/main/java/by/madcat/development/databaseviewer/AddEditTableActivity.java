@@ -18,8 +18,8 @@ import org.json.JSONException;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
@@ -85,7 +85,8 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         break;
                     case TABLE_EDIT:
                         if(checkTableToEdit())
-                            createTransactionOfChanges();
+                            connectModel.setUserRequestToServer(MSSQLQueriesGenerator.changeTable(
+                                    oldTable, newTable, dbName, tableName));
                         else
                             finish();
 
@@ -139,75 +140,6 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         return false;
     }
 
-    private void createTransactionOfChanges(){
-        int counter;
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(MSSQLQueriesPartsList.BEGIN_TRANSACTION);
-        stringBuilder.append(String.format(MSSQLQueriesPartsList.DB_SELECT, dbName));
-
-        if(!oldTable.getTableName().equals(newTable.getTableName()))
-            stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_NAME, tableName, newTable.getTableName()));
-
-        counter = oldTable.getFieldsList().size();
-
-        if(counter > newTable.getFieldsList().size()) {
-            counter = newTable.getFieldsList().size();
-        }
-
-        for(int i = 0; i < counter; i++){
-            if(!oldTable.getFieldsList().get(i).getFieldName().equals(newTable.getFieldsList().get(i).getFieldName())){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_RENAME,
-                        newTable.getTableName(),
-                        oldTable.getFieldsList().get(i).getFieldName(),
-                        newTable.getFieldsList().get(i).getFieldName()));
-            }
-
-            if(!oldTable.getFieldsList().get(i).getType().equals(newTable.getFieldsList().get(i).getType())){
-                String type = "";
-                if(newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
-                    type = SqlTypes.VARCHAR.toString() + "(" + newTable.getFieldsList().get(i).getLength() + ")";
-                }else{
-                    type = newTable.getFieldsList().get(i).getType().toString();
-                }
-
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
-                        newTable.getTableName(),
-                        newTable.getFieldsList().get(i).getFieldName(),
-                        type));
-            }
-
-            if(oldTable.getFieldsList().get(i).getLength() != newTable.getFieldsList().get(i).getLength() && newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
-                String length = newTable.getFieldsList().get(i).getType().toString() +
-                        "(" +
-                        newTable.getFieldsList().get(i).getLength() +
-                        ")";
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
-                        newTable.getTableName(),
-                        newTable.getFieldsList().get(i).getFieldName(),
-                        length));
-            }
-        }
-
-        if(newTable.getFieldsList().size() < oldTable.getFieldsList().size()){
-            for(int i = counter; i < oldTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
-            }
-        }else{
-            for(int i = counter; i < newTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_ADD_FIELD,
-                        newTable.getFieldsList().get(i).getFieldName(),
-                        newTable.getFieldsList().get(i).getType()));
-            }
-        }
-
-        stringBuilder.append(MSSQLQueriesPartsList.COMMIT_TRANSACTION);
-
-        connectModel.setUserRequestToServer(stringBuilder.toString());
-    }
-
     private void createNewTableMetadata(){
         newTable = new TableMetadataModel(tableNameEditText.getText().toString());
 
@@ -259,7 +191,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             }
 
             if(((CheckBox)field.getChildAt(3)).isChecked())
-                primaryKey = String.format(MSSQLQueriesPartsList.TABLE_EDIT_PRIMARY_KEY, fieldName);
+                primaryKey = MSSQLQueriesGenerator.getPrimaryKeyPart(fieldName);
 
             if(i != fieldsLinearLayoutCount - 1 || !primaryKey.equals(""))
                 stringBuilder.append(", ");
@@ -270,7 +202,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
 
         connectModel.setUserRequestToServer(
-                String.format(MSSQLQueriesPartsList.TABLE_ADD, dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
+                MSSQLQueriesGenerator.createTable(dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
         }
 
     private void getTableMetadata(){
@@ -280,8 +212,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
 
-        connectModel.setUserRequestToServer(
-                String.format(MSSQLQueriesPartsList.TABLE_METADATA, dbName, tableName));
+        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.getTableMetadata(dbName, tableName));
 
         startService(intent);
     }
@@ -303,7 +234,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                 oldTable.addNewField(fieldName, type, length, isKey);
             }
             createIssetFields();
-        } catch (JSONException e) {
+        } catch (JSONException e                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ) {
             // for Google Analytics
         }
     }

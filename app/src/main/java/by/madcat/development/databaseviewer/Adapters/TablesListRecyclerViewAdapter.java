@@ -12,7 +12,7 @@ import by.madcat.development.databaseviewer.AddEditTableActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 

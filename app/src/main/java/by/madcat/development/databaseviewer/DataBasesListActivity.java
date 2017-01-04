@@ -18,8 +18,8 @@ import by.madcat.development.databaseviewer.Adapters.DatabasesListRecyclerViewAd
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class DataBasesListActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -77,7 +77,7 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
 
     private void loadDatabasesList(){
         ConnectModel model = ConnectModel.getInstance("", "", "");
-        model.setUserRequestToServer(MSSQLQueriesPartsList.DATABASES_LIST_QUERY);
+        model.setUserRequestToServer(MSSQLQueriesGenerator.getDatabasesList());
 
         Intent intent = new Intent(DataBasesListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);

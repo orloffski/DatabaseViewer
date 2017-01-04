@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import by.madcat.development.databaseviewer.AddEditTableActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
+import by.madcat.development.databaseviewer.RecordsListActivity;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesPartsList;
 
@@ -25,20 +26,16 @@ public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapt
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.text_view_for_name.setText(this.namesList.get(position));
-
-        /*
-        // onClick to open records list
 
         holder.text_view_for_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = TablesListActivity.getIntent(context, namesList.get(position));
+                Intent intent = RecordsListActivity.getIntent(context, databaseName, namesList.get(position));
                 context.startActivity(intent);
             }
         });
-        */
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override

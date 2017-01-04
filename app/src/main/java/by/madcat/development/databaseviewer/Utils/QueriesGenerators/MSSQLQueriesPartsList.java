@@ -34,4 +34,7 @@ public class MSSQLQueriesPartsList {
     // transaction
     public static final String BEGIN_TRANSACTION = "BEGIN TRANSACTION;";
     public static final String COMMIT_TRANSACTION = "COMMIT;";
+
+    // get all records from 2%s table 1%s database
+    public static final String RECORDS_LIST_QUERY = "Use %s SELECT * FROM %s";
 }

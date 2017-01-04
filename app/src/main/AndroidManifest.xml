@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".AddEditTableActivity">
         </activity>
+        <activity android:name=".RecordsListActivity">
+        </activity>
     </application>
 
 </manifest>

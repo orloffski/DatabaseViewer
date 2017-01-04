@@ -100,4 +100,8 @@ public class MSSQLQueriesGenerator {
 
         return stringBuilder.toString();
     }
+
+    public static final String getRecordsList(String databaseName, String tableName){
+        return String.format(MSSQLQueriesPartsList.RECORDS_LIST_QUERY, databaseName, tableName);
+    }
 }

@@ -2,7 +2,10 @@ package by.madcat.development.databaseviewer.Utils;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.InputType;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,14 +25,15 @@ import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 
 public class ViewGenerator {
-    public static void addNewFieldInMainView(final Context context, final LinearLayout mainView){
+    public static final void addNewFieldInMainView(final Context context, final LinearLayout mainView){
         final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
         int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
 
         mainView.addView(generateNewFieldView(context, mainView), lParams);
     }
-    public static View generateNewFieldView(final Context context, final LinearLayout mainView){
+
+    public static final View generateNewFieldView(final Context context, final LinearLayout mainView){
         final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
         int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -99,13 +105,15 @@ public class ViewGenerator {
 
         return fieldLinearLayout;
     }
-    public static void addIssetFieldsInMainView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
+
+    public static final void addIssetFieldsInMainView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
         ArrayList<View> views = generateIssetFieldsView(context, mainView, fieldsArrayList);
 
         for(View view : views)
             mainView.addView(view);
     }
-    public static ArrayList<View> generateIssetFieldsView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
+
+    public static final ArrayList<View> generateIssetFieldsView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
         ArrayList<View> views = new ArrayList<>();
 
         for(TableMetadataModel.Fields field : fieldsArrayList){
@@ -118,7 +126,8 @@ public class ViewGenerator {
 
         return views;
     }
-    private static void fillValuesInFields(View view, TableMetadataModel.Fields field){
+
+    private static final void fillValuesInFields(View view, TableMetadataModel.Fields field){
         SqlTypes[] types = SqlTypes.values();
         int position = Arrays.binarySearch(types, field.getType());
 
@@ -137,5 +146,39 @@ public class ViewGenerator {
 
         CheckBox primaryKey = (CheckBox) ((LinearLayout)view).getChildAt(3);
         primaryKey.setChecked(field.isPrimaryKey());
+    }
+
+    public static final void createViewRecordLine(Context context, TableRow mainLayout, String[] data, boolean isHeader, int position){
+        for(int i = 0; i < mainLayout.getChildCount(); i++)
+            if(mainLayout.getChildAt(i) instanceof TextView)
+                mainLayout.removeView(mainLayout.getChildAt(i));
+
+        for(int i = 0; i < data.length; i++){
+            ViewGroup.LayoutParams textViewParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+            TextView textView = new TextView(context);
+            textView.setGravity(Gravity.RIGHT);
+            textView.setText(data[i]);
+            textView.setPadding(10, 0, 0, 0);
+            if(isHeader) {
+                textView.setTypeface(Typeface.DEFAULT_BOLD);
+            }
+
+            mainLayout.addView(textView, i, textViewParams);
+        }
+
+        ImageButton deleteRecordButton = (ImageButton)mainLayout.findViewById(R.id.deleteRecordButton);
+        ImageButton editRecordButton = (ImageButton)mainLayout.findViewById(R.id.editRecordButton);
+
+        if(isHeader){
+            mainLayout.removeView(deleteRecordButton);
+            mainLayout.removeView(editRecordButton);
+            mainLayout.addView(new TextView(context), new TableRow.LayoutParams(60, ViewGroup.LayoutParams.WRAP_CONTENT));
+            mainLayout.addView(new TextView(context), new TableRow.LayoutParams(60, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        if(position == 0)
+            mainLayout.setBackgroundColor(Color.GRAY);
+        else if(position != 0 && position%2 == 0)
+            mainLayout.setBackgroundColor(Color.rgb(233,233,233));
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -228,4 +230,37 @@ public class ViewGenerator {
         else if(position != 0 && position%2 == 0)
             mainLayout.setBackgroundColor(Color.rgb(233,233,233));
     }
+
+    public static final void createRecordView(Context context, TableLayout recordLayout, TableMetadataModel tableMetadata){
+        int counter = 0;
+
+        for(TableMetadataModel.Fields field : tableMetadata.getFieldsList()){
+            TableRow row = new TableRow(context);
+
+            TextView fieldView = new TextView(context);
+            fieldView.setText(field.getFieldName());
+            fieldView.setTextColor(Color.BLACK);
+            fieldView.setTypeface(Typeface.DEFAULT_BOLD);
+            fieldView.setMinWidth(150);
+            row.addView(fieldView);
+
+            EditText fieldValue = new EditText(context);
+            fieldValue.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            fieldValue.setMaxLines(10);
+
+            if(field.getLength() != 0)
+                fieldValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(field.getLength())});
+
+            fieldValue.setMinWidth(500);
+            row.addView(fieldValue);
+
+            if(counter%2 ==0)
+                row.setBackgroundColor(Color.rgb(233,233,233));
+
+            recordLayout.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            counter++;
+        }
+    }
+
+    public static final void fillRecordView(){}
 }

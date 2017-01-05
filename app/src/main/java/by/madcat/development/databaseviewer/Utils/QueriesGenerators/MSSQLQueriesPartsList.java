@@ -41,6 +41,7 @@ public class MSSQLQueriesPartsList {
     // get all records from 2%s table 1%s database
     public static final String RECORDS_LIST_QUERY = "Use %s SELECT * FROM %s";
     // delete record from table 2%s in database 1%s where id field name 3%s = 4%s
-    public static final String RECORD_DELETE =
-            "Use %s DELETE FROM %s WHERE %s = '%s'";
+    public static final String RECORD_DELETE = "Use %s DELETE FROM %s WHERE %s = '%s'";
+    // get record from 2%s table, 1%s database, where id field name 3%s = 4%s
+    public static final String RECORD = "Use %s SELECT * FROM %s WHERE %s = %s";
 }

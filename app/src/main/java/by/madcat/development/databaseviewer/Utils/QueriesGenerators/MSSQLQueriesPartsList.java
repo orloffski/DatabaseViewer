@@ -1,6 +1,10 @@
 package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
 
 public class MSSQLQueriesPartsList {
+    // get primary keys
+    public static final String PRIMARY_KEYS_STRING_1 = "USE %s SELECT TABLE_NAME, COLUMN_NAME " +
+            "FROM information_schema.KEY_COLUMN_USAGE ";
+    public static final String PRIMARY_KEYS_STRING_2 = "WHERE CONSTRAINT_NAME LIKE 'PK%'";
     // get all databases from sql server (without system db)
     public static final String DATABASES_LIST_QUERY = "SELECT name FROM master.dbo.sysdatabases WHERE dbid > 4";
     // create database
@@ -16,12 +20,13 @@ public class MSSQLQueriesPartsList {
     // create table (table name 2%s in db name 1%s where fields string 3%s)
     public static final String TABLE_ADD = "Use %s CREATE TABLE %s (%s)";
     // get table metadata (get metadata from table 2%s in database 1%s, JOIN to get primary key in table)
-    public static final String TABLE_METADATA =
+    public static final String TABLE_METADATA_1 =
             "Use %s SELECT data_table.COLUMN_NAME, data_table.DATA_TYPE, data_table.CHARACTER_MAXIMUM_LENGTH, keys_table.ORDINAL_POSITION " +
             "FROM INFORMATION_SCHEMA.COLUMNS AS data_table " +
             "LEFT OUTER JOIN information_schema.KEY_COLUMN_USAGE AS keys_table " +
-            "ON data_table.TABLE_NAME = keys_table.TABLE_NAME AND data_table.COLUMN_NAME = keys_table.COLUMN_NAME AND keys_table.CONSTRAINT_NAME LIKE 'PK%' " +
-            "where data_table.table_name = '%s'";
+            "ON data_table.TABLE_NAME = keys_table.TABLE_NAME AND data_table.COLUMN_NAME = keys_table.COLUMN_NAME";
+    public static final String TABLE_METADATA_2 =" AND keys_table.CONSTRAINT_NAME LIKE 'PK%' ";
+    public static final String TABLE_METADATA_3 ="where data_table.table_name = '%s'";
     // edit table
     public static final String DB_SELECT = "Use %s;";
     public static final String TABLE_EDIT = "ALTER TABLE %s ";

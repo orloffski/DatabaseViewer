@@ -4,6 +4,13 @@ import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
 public class MSSQLQueriesGenerator {
+    public static final String getPrimaryKeysList(String databaseName){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format(MSSQLQueriesPartsList.PRIMARY_KEYS_STRING_1, databaseName));
+        stringBuilder.append(MSSQLQueriesPartsList.PRIMARY_KEYS_STRING_2);
+        return stringBuilder.toString();
+    }
+
     public static final String getDatabasesList(){
         return MSSQLQueriesPartsList.DATABASES_LIST_QUERY;
     }
@@ -29,7 +36,12 @@ public class MSSQLQueriesGenerator {
     }
 
     public static final String getTableMetadata(String databaseName, String tableName){
-        return String.format(MSSQLQueriesPartsList.TABLE_METADATA, databaseName, tableName);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_METADATA_1, databaseName));
+        stringBuilder.append(MSSQLQueriesPartsList.TABLE_METADATA_2);
+        stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_METADATA_3, tableName));
+
+        return stringBuilder.toString();
     }
 
     public static final String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName){

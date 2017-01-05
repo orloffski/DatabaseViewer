@@ -6,7 +6,7 @@ import java.util.TreeMap;
 public class PrimaryKeysModel {
     private static PrimaryKeysModel instance;
 
-    private Map<String, KeysModel> keysData;
+    private Map<String, String> keysData;
 
     private PrimaryKeysModel(){
         keysData = new TreeMap<>();
@@ -20,37 +20,30 @@ public class PrimaryKeysModel {
         return instance;
     }
 
-    public void addKey(String tableName, String fieldName, int position){
-        keysData.put(tableName, new KeysModel(fieldName, position));
+    public void addKey(String tableName, String fieldName){
+        keysData.put(tableName, fieldName);
     }
 
-    public String getFieldByTableName(String tableName){
-        KeysModel model = this.keysData.get(tableName);
+    public String getFieldName(String tableName){
+        if(keysData.get(tableName) != null)
+            return keysData.get(tableName);
 
-        return model.getFieldName();
+        return "";
     }
 
-    public int getPositionByTableName(String tableName){
-        KeysModel model = this.keysData.get(tableName);
-
-        return model.getPosition();
+    public void clearKeys(){
+        this.keysData.clear();
     }
 
-    private class KeysModel{
-        private String fieldName;
-        private int position;
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
 
-        public KeysModel(String fieldName, int position){
-            this.fieldName = fieldName;
-            this.position = position;
+        for(Map.Entry<String, String> value : this.keysData.entrySet()){
+            stringBuilder.append("table: ").append(value.getKey());
+            stringBuilder.append(" field: ").append(value.getValue()).append("\n");
         }
 
-        public String getFieldName() {
-            return fieldName;
-        }
-
-        public int getPosition() {
-            return position;
-        }
+        return stringBuilder.toString();
     }
 }

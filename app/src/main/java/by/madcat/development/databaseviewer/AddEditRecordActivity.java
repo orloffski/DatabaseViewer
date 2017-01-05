@@ -12,6 +12,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
@@ -165,6 +168,12 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
     public void sendDataFromServer(String jsonArrayData) {
         if(this.loadData){
 
+            try {
+                JSONArray jsonArray = new JSONArray(jsonArrayData);
+                ViewGenerator.fillRecordView(recordLayout, tableMetadata, jsonArray);
+            } catch (JSONException e) {
+                // for Google Analytics
+            }
         }else{
             tableMetadata = SqlJsonUtils.createTableMetadata(jsonArrayData, tableName, PrimaryKeysModel.getInstance());
 

@@ -20,6 +20,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -261,5 +264,19 @@ public class ViewGenerator {
         }
     }
 
-    public static final void fillRecordView(){}
+    public static final void fillRecordView(TableLayout recordLayout, TableMetadataModel tableMetadata, JSONArray jsonArray){
+        int count = recordLayout.getChildCount();
+
+        for(int i = 0; i < count; i++){
+            TableRow row = (TableRow) recordLayout.getChildAt(i);
+            EditText fieldValue = (EditText) row.getChildAt(1);
+            String fieldName = tableMetadata.getFieldsList().get(i).getFieldName();
+
+            try {
+                fieldValue.setText(jsonArray.getJSONObject(0).getString(fieldName));
+            } catch (JSONException e) {
+                // for Google Analytics
+            }
+        }
+    }
 }

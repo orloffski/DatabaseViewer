@@ -36,12 +36,7 @@ public class MSSQLQueriesGenerator {
     }
 
     public static final String getTableMetadata(String databaseName, String tableName){
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_METADATA_1, databaseName));
-        stringBuilder.append(MSSQLQueriesPartsList.TABLE_METADATA_2);
-        stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_METADATA_3, tableName));
-
-        return stringBuilder.toString();
+        return String.format(MSSQLQueriesPartsList.TABLE_METADATA, databaseName, tableName);
     }
 
     public static final String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName){

@@ -18,6 +18,7 @@ import org.json.JSONException;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
@@ -221,15 +222,17 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         try {
             JSONArray jsonArray = new JSONArray(jsonArrayData);
             oldTable = new TableMetadataModel(tableName);
+            PrimaryKeysModel primaryKeysModel = PrimaryKeysModel.getInstance();
 
             for(int i = 0; i < jsonArray.length(); i++){
                 String fieldName = jsonArray.getJSONObject(i).getString("COLUMN_NAME").toString();
                 SqlTypes type = SqlTypes.valueOf(jsonArray.getJSONObject(i).getString("DATA_TYPE").toString().toUpperCase());
                 int length = jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString().equals("") ? 0 :
                         Integer.parseInt(jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString());
-                String PK = jsonArray.getJSONObject(i).getString("ORDINAL_POSITION").toString();
 
-                boolean isKey = PK.equals("") ? false : true;
+                boolean isKey = false;
+                if(primaryKeysModel.getFieldName(tableName).equals(fieldName))
+                    isKey = true;
 
                 oldTable.addNewField(fieldName, type, length, isKey);
             }

@@ -1,6 +1,7 @@
 package by.madcat.development.databaseviewer.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.InputType;
@@ -21,10 +22,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
+import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 
 public class ViewGenerator {
+    static int primaryKeyNumber = -1;
+
     public static final void addNewFieldInMainView(final Context context, final LinearLayout mainView){
         final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
         int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -148,7 +155,13 @@ public class ViewGenerator {
         primaryKey.setChecked(field.isPrimaryKey());
     }
 
-    public static final void createViewRecordLine(Context context, TableRow mainLayout, String[] data, boolean isHeader, int position){
+    public static final void createViewRecordLine(final Context context, TableRow mainLayout, String[] data, boolean isHeader, int position, final String databaseName, final String tableName){
+        final String primaryKeyFieldName;
+        String primaryKey = "";
+
+        PrimaryKeysModel primaryKeysModel = PrimaryKeysModel.getInstance();
+        primaryKeyFieldName = primaryKeysModel.getFieldName(tableName);
+
         for(int i = 0; i < mainLayout.getChildCount(); i++)
             if(mainLayout.getChildAt(i) instanceof TextView)
                 mainLayout.removeView(mainLayout.getChildAt(i));
@@ -161,12 +174,32 @@ public class ViewGenerator {
             textView.setPadding(10, 0, 0, 0);
             if(isHeader) {
                 textView.setTypeface(Typeface.DEFAULT_BOLD);
+                if(primaryKeyFieldName.equals(data[i])) {
+                    primaryKeyNumber = i;
+                }
+            }else{
+                if(primaryKeyNumber != -1) {
+                    primaryKey = data[primaryKeyNumber];
+                }
             }
 
             mainLayout.addView(textView, i, textViewParams);
         }
 
+        final String finalPrimaryKey = primaryKey;
         ImageButton deleteRecordButton = (ImageButton)mainLayout.findViewById(R.id.deleteRecordButton);
+        deleteRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConnectModel model = ConnectModel.getInstance("", "", "");
+                model.setUserRequestToServer(MSSQLQueriesGenerator.deleteRecord(databaseName, tableName, primaryKeyFieldName, finalPrimaryKey));
+
+                Intent intent = new Intent(context, RequestService.class);
+                intent.putExtra(RequestService.EXECUTE_MODEL, 1);
+                context.startService(intent);
+            }
+        });
+
         ImageButton editRecordButton = (ImageButton)mainLayout.findViewById(R.id.editRecordButton);
 
         if(isHeader){

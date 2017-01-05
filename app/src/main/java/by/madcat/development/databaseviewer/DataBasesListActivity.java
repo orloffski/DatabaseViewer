@@ -43,10 +43,6 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
 
         databasesList.setAdapter(adapter);
 
-        broadcastReceiver = new ServerRequestBroadcastReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
-        broadcastReceiver.register(getApplicationContext(), intentFilter);
-
         databaseAdd = (FloatingActionButton) findViewById(R.id.database_add);
         databaseAdd.setOnClickListener(new View.OnClickListener() {
             @Override

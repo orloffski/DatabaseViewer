@@ -111,4 +111,8 @@ public class MSSQLQueriesGenerator {
     public static final String getRecordsList(String databaseName, String tableName){
         return String.format(MSSQLQueriesPartsList.RECORDS_LIST_QUERY, databaseName, tableName);
     }
+
+    public static final String deleteRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
+        return String.format(MSSQLQueriesPartsList.RECORD_DELETE, databaseName, tableName, primaryKeyFieldName, primaryKey);
+    }
 }

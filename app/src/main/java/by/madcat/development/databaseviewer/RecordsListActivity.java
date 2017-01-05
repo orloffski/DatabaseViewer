@@ -4,11 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +42,7 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
 
         records = new ArrayList<>();
         recordsList = (TableLayout) findViewById(R.id.recordsTable);
-        adapter = new RecordsListAdapter(this, records);
+        adapter = new RecordsListAdapter(this, records, databaseName, tableName);
 
         loadRecordsList(this.databaseName, this.tableName);
 
@@ -72,7 +69,7 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
 
     @Override
     public void sendErrorMessage(String errorMessage) {
-
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -112,7 +109,7 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
 
     @Override
     public void sendQueryExecutedNoResult() {
-
+        loadRecordsList(databaseName, tableName);
     }
 
     private void loadRecordsList(String databaseName, String tableName){

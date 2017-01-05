@@ -55,10 +55,6 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
 
         tablesList.setAdapter(adapter);
 
-        broadcastReceiver = new ServerRequestBroadcastReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
-        broadcastReceiver.register(getApplicationContext(), intentFilter);
-
         tableAdd = (FloatingActionButton)findViewById(R.id.table_add);
         tableAdd.setOnClickListener(new View.OnClickListener() {
             @Override

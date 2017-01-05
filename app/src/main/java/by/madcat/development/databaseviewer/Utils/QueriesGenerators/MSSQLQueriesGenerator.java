@@ -123,4 +123,8 @@ public class MSSQLQueriesGenerator {
     public static final String insertRecords(String databaseName, String tableName, String fieldsList){
         return String.format(MSSQLQueriesPartsList.RECORD_INSERT, databaseName, tableName, fieldsList);
     }
+
+    public static final String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString){
+        return String.format(MSSQLQueriesPartsList.RECORD_UPDATE, databaseName, tableName, updateColumnsString, updateRecordKeyString);
+    }
 }

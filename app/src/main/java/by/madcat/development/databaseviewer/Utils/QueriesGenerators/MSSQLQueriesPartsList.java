@@ -46,4 +46,6 @@ public class MSSQLQueriesPartsList {
     public static final String RECORDS = "Use %s SELECT * FROM %s WHERE %s = %s";
     // insert new record in table 2%s database 1%s fields string 3%s
     public static final String RECORD_INSERT = "Use %s INSERT INTO %s VALUES (%s)";
+    // update record in table 2%s database 1%s set values 3%s where (id field name = key) 4%s
+    public static final String RECORD_UPDATE = "Use %s UPDATE %s SET %s WHERE %s";
 }

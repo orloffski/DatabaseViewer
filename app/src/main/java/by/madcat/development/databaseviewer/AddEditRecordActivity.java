@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -85,9 +85,10 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
 
                 switch (action){
                     case RECORD_ADD:
-                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.insertRecords(databaseName, tableName, getFieldsValues()));
+                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.insertRecords(databaseName, tableName, getFieldsValuesToInsert()));
                         break;
                     case RECORD_EDIT:
+                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.updateRecord(databaseName, tableName, getFieldsValuesToUpdate(), getRecordPrimaryKeyString()));
                         break;
                 }
 
@@ -134,7 +135,34 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         startService(intent);
     }
 
-    private String getFieldsValues(){
+    private String getRecordPrimaryKeyString(){
+        return primaryKeyFieldName + " = '" + primaryKeyValue + "'";
+    }
+
+    private String getFieldsValuesToUpdate(){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int count = recordLayout.getChildCount();
+
+        for(int i = 0; i < count; i++){
+            TableRow row = (TableRow)recordLayout.getChildAt(i);
+
+            TextView fieldView = (TextView)row.getChildAt(0);
+            EditText fieldValue = (EditText)row.getChildAt(1);
+
+            stringBuilder.append(fieldView.getText().toString());
+            stringBuilder.append("=").append("'");
+            stringBuilder.append(fieldValue.getText().toString());
+            stringBuilder.append("'");
+
+            if(i != count - 1)
+                stringBuilder.append(", ");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String getFieldsValuesToInsert(){
         StringBuilder stringBuilder = new StringBuilder();
 
         int count = recordLayout.getChildCount();
@@ -188,6 +216,6 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
 
     @Override
     public void sendQueryExecutedNoResult() {
-
+        finish();
     }
 }

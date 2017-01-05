@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
     private TableLayout recordsList;
     private RecordsListAdapter adapter;
 
+    private FloatingActionButton recordAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,21 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
         records = new ArrayList<>();
         recordsList = (TableLayout) findViewById(R.id.recordsTable);
         adapter = new RecordsListAdapter(this, records, databaseName, tableName);
+
+        recordAdd = (FloatingActionButton)findViewById(R.id.record_add);
+        recordAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddEditRecordActivity.getIntent(
+                        getApplicationContext(),
+                        AddEditRecordActivity.RECORD_ADD,
+                        tableName,
+                        databaseName,
+                        "",
+                        "");
+                startActivity(intent);
+            }
+        });
 
         loadRecordsList(this.databaseName, this.tableName);
 

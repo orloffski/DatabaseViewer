@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import by.madcat.development.databaseviewer.AddEditRecordActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
@@ -201,6 +202,19 @@ public class ViewGenerator {
         });
 
         ImageButton editRecordButton = (ImageButton)mainLayout.findViewById(R.id.editRecordButton);
+        editRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddEditRecordActivity.getIntent(
+                        context,
+                        AddEditRecordActivity.RECORD_EDIT,
+                        tableName,
+                        databaseName,
+                        finalPrimaryKey,
+                        primaryKeyFieldName);
+                context.startActivity(intent);
+            }
+        });
 
         if(isHeader){
             mainLayout.removeView(deleteRecordButton);

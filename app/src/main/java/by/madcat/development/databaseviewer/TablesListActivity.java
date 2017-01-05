@@ -84,6 +84,9 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);
         IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
         broadcastReceiver.register(getApplicationContext(), intentFilter);
+
+        if(this.loadData)
+            loadTablesList(this.databaseName);
     }
 
     public static Intent getIntent(Context context, String databaseName){

@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
@@ -72,7 +74,21 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         insertRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(AddEditRecordActivity.this, RequestService.class);
+                intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
+                intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
+                intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
+                intent.putExtra(RequestService.EXECUTE_MODEL, 1);
 
+                switch (action){
+                    case RECORD_ADD:
+                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.insertRecords(databaseName, tableName, getFieldsValues()));
+                        break;
+                    case RECORD_EDIT:
+                        break;
+                }
+
+                startService(intent);
             }
         });
 
@@ -94,8 +110,6 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
                 setTitle("Edit record in '" + tableName + "' table where '" + primaryKeyFieldName + "' = '" + primaryKeyValue + "'");
                 break;
         }
-
-
     }
 
     @Override
@@ -115,6 +129,26 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
         connectModel.setUserRequestToServer(MSSQLQueriesGenerator.getRecord(databaseName, tableName, primaryKeyFieldName, primaryKeyValue));
         startService(intent);
+    }
+
+    private String getFieldsValues(){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int count = recordLayout.getChildCount();
+
+        for(int i = 0; i < count; i++){
+            TableRow row = (TableRow) recordLayout.getChildAt(i);
+            EditText fieldValue = (EditText) row.getChildAt(1);
+
+            stringBuilder.append("'");
+            stringBuilder.append(fieldValue.getText().toString());
+            stringBuilder.append("'");
+
+            if(i != count - 1)
+                stringBuilder.append(", ");
+        }
+
+        return stringBuilder.toString();
     }
 
     @Override

@@ -117,6 +117,10 @@ public class MSSQLQueriesGenerator {
     }
 
     public static final String getRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
-        return String.format(MSSQLQueriesPartsList.RECORD, databaseName, tableName, primaryKeyFieldName, primaryKey);
+        return String.format(MSSQLQueriesPartsList.RECORDS, databaseName, tableName, primaryKeyFieldName, primaryKey);
+    }
+
+    public static final String insertRecords(String databaseName, String tableName, String fieldsList){
+        return String.format(MSSQLQueriesPartsList.RECORD_INSERT, databaseName, tableName, fieldsList);
     }
 }

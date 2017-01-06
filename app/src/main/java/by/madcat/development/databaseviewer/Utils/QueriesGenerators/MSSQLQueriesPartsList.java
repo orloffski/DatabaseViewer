@@ -2,8 +2,8 @@ package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
 
 public class MSSQLQueriesPartsList {
     // get primary keys
-    public static final String PRIMARY_KEYS_STRING_1 = "USE %s SELECT TABLE_NAME, COLUMN_NAME " +
-            "FROM information_schema.KEY_COLUMN_USAGE ";
+    public static final String PRIMARY_KEYS_STRING_1 =
+            "USE %s SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE ";
     public static final String PRIMARY_KEYS_STRING_2 = "WHERE CONSTRAINT_NAME LIKE 'PK%'";
     // get all databases from sql server (without system db)
     public static final String DATABASES_LIST_QUERY = "SELECT name FROM master.dbo.sysdatabases WHERE dbid > 4";

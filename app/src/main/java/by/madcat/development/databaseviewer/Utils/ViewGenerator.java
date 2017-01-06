@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -58,6 +59,7 @@ public class ViewGenerator {
         fieldName.setHintTextColor(Color.BLUE);
         fieldName.setTextColor(Color.BLACK);
         fieldName.setPadding(0, 0, 10, 0);
+        fieldName.setInputType(getInputTypeBySqlType(SqlTypes.VARCHAR));
         fieldLinearLayout.addView(fieldName, editTextParams);
 
         ViewGroup.LayoutParams lenghtEditTextParams = new ViewGroup.LayoutParams(80, wrapContent);
@@ -68,6 +70,7 @@ public class ViewGenerator {
         lenghtEditText.setTextColor(Color.BLACK);
         lenghtEditText.setPadding(0, 0, 10, 0);
         lenghtEditText.setEnabled(false);
+        lenghtEditText.setInputType(getInputTypeBySqlType(SqlTypes.INT));
         fieldLinearLayout.addView(lenghtEditText, lenghtEditTextParams);
 
         ViewGroup.LayoutParams spinnerParams = new ViewGroup.LayoutParams(180, wrapContent);
@@ -233,7 +236,7 @@ public class ViewGenerator {
             mainLayout.setBackgroundColor(Color.rgb(233,233,233));
     }
 
-    public static final void createRecordView(Context context, TableLayout recordLayout, TableMetadataModel tableMetadata){
+    public static final void createRecordView(final Context context, TableLayout recordLayout, TableMetadataModel tableMetadata){
         int counter = 0;
 
         for(TableMetadataModel.Fields field : tableMetadata.getFieldsList()){
@@ -246,15 +249,33 @@ public class ViewGenerator {
             fieldView.setMinWidth(150);
             row.addView(fieldView);
 
-            EditText fieldValue = new EditText(context);
-            fieldValue.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-            fieldValue.setMaxLines(10);
+            if(!field.getType().equals(SqlTypes.BIT)) {
+                EditText fieldValue = new EditText(context);
+                fieldValue.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                fieldValue.setMaxLines(10);
 
-            if(field.getLength() != 0)
-                fieldValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(field.getLength())});
+                if (field.getLength() != 0)
+                    fieldValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(field.getLength())});
 
-            fieldValue.setMinWidth(500);
-            row.addView(fieldValue);
+                fieldValue.setInputType(getInputTypeBySqlType(field.getType()));
+                fieldValue.setMinWidth(400);
+                row.addView(fieldValue);
+            }else{
+                CheckBox fieldValue = new CheckBox(context);
+                row.addView(fieldValue);
+            }
+
+            if(field.getType().equals(SqlTypes.IMAGE)) {
+                Button loadFilebutton = new Button(context);
+                loadFilebutton.setText("choose file");
+                loadFilebutton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                row.addView(loadFilebutton);
+            }
 
             if(counter%2 ==0)
                 row.setBackgroundColor(Color.rgb(233,233,233));
@@ -269,14 +290,48 @@ public class ViewGenerator {
 
         for(int i = 0; i < count; i++){
             TableRow row = (TableRow) recordLayout.getChildAt(i);
-            EditText fieldValue = (EditText) row.getChildAt(1);
             String fieldName = tableMetadata.getFieldsList().get(i).getFieldName();
 
-            try {
-                fieldValue.setText(jsonArray.getJSONObject(0).getString(fieldName));
-            } catch (JSONException e) {
-                // for Google Analytics
+            if(row.getChildAt(1) instanceof EditText) {
+                EditText fieldValue = (EditText) row.getChildAt(1);
+
+                try {
+                    fieldValue.setText(jsonArray.getJSONObject(0).getString(fieldName));
+                } catch (JSONException e) {
+                    // for Google Analytics
+                }
+            }else if(row.getChildAt(1) instanceof CheckBox){
+                CheckBox fieldValue = (CheckBox) row.getChildAt(1);
+                int value = 0;
+
+                try {
+                    value = Integer.parseInt(jsonArray.getJSONObject(0).getString(fieldName));
+                } catch (JSONException e) {
+                    // for Google Analytics
+                }
+
+                fieldValue.setChecked(value == 1);
             }
         }
+    }
+
+    public static final int getInputTypeBySqlType(SqlTypes type){
+        if(type.equals(SqlTypes.INT) ||
+                type.equals(SqlTypes.SMALLINT) ||
+                type.equals(SqlTypes.REAL) ||
+                type.equals(SqlTypes.MONEY) ||
+                type.equals(SqlTypes.TINYINT) ||
+                type.equals(SqlTypes.DECIMAL))
+            return (InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        else if(type.equals(SqlTypes.CHAR) ||
+                type.equals(SqlTypes.VARCHAR) ||
+                type.equals(SqlTypes.TEXT))
+            return InputType.TYPE_CLASS_TEXT;
+        else if(type.equals(SqlTypes.DATETIME) ||
+                type.equals(SqlTypes.DATE) ||
+                type.equals(SqlTypes.TIME))
+            return InputType.TYPE_CLASS_DATETIME;
+
+        return InputType.TYPE_CLASS_TEXT;
     }
 }

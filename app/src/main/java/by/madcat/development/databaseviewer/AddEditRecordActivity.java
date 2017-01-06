@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -148,12 +150,22 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
             TableRow row = (TableRow)recordLayout.getChildAt(i);
 
             TextView fieldView = (TextView)row.getChildAt(0);
-            EditText fieldValue = (EditText)row.getChildAt(1);
 
             stringBuilder.append(fieldView.getText().toString());
             stringBuilder.append("=").append("'");
-            stringBuilder.append(fieldValue.getText().toString());
-            stringBuilder.append("'");
+
+            if(row.getChildAt(1) instanceof EditText) {
+                EditText fieldValue = (EditText) row.getChildAt(1);
+
+                stringBuilder.append(fieldValue.getText().toString());
+                stringBuilder.append("'");
+            }else if(row.getChildAt(1) instanceof CheckBox){
+                CheckBox fieldValue = (CheckBox)row.getChildAt(1);
+                int value = fieldValue.isChecked() ? 1 : 0;
+
+                stringBuilder.append(String.valueOf(value));
+                stringBuilder.append("'");
+            }
 
             if(i != count - 1)
                 stringBuilder.append(", ");
@@ -169,16 +181,27 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
 
         for(int i = 0; i < count; i++){
             TableRow row = (TableRow) recordLayout.getChildAt(i);
-            EditText fieldValue = (EditText) row.getChildAt(1);
 
-            stringBuilder.append("'");
-            stringBuilder.append(fieldValue.getText().toString());
-            stringBuilder.append("'");
+            if(row.getChildAt(1) instanceof EditText) {
+                EditText fieldValue = (EditText) row.getChildAt(1);
+
+                stringBuilder.append("'");
+                stringBuilder.append(fieldValue.getText().toString());
+                stringBuilder.append("'");
+            }else if(row.getChildAt(1) instanceof CheckBox){
+                CheckBox fieldValue = (CheckBox) row.getChildAt(1);
+                int value = fieldValue.isChecked() ? 1 : 0;
+
+                stringBuilder.append("'");
+                stringBuilder.append(String.valueOf(value));
+                stringBuilder.append("'");
+            }
 
             if(i != count - 1)
                 stringBuilder.append(", ");
         }
 
+        Log.d("payment", stringBuilder.toString());
         return stringBuilder.toString();
     }
 

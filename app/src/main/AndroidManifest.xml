@@ -36,6 +36,16 @@
         </activity>
         <activity android:name=".AddEditRecordActivity">
         </activity>
+
+        <provider
+            android:name=".SQLiteData.DatabaseViewerContentProvider"
+            android:authorities="DatabaseDescription.AUTHORITY"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
+
+        <activity android:name=".QueriesListActivity">
+        </activity>
     </application>
 
 </manifest>

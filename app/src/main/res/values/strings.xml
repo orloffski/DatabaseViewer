@@ -4,4 +4,11 @@
     <!-- item menu -->
     <string name="edit_item">Изменить</string>
     <string name="delete_item">Удалить</string>
+
+    <!-- content provider strings -->
+    <string name="invalid_query_uri">Invalid query Uri:</string>
+    <string name="invalid_delete_uri">Invalid delete Uri:</string>
+    <string name="invalid_insert_uri">Invalid insert Uri:</string>
+    <string name="invalid_update_uri">Invalid update Uri:</string>
+    <string name="insert_failed">Insert failed: s</string>
 </resources>

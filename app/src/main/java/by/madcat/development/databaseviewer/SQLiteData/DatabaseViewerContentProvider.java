@@ -82,10 +82,10 @@ public class DatabaseViewerContentProvider extends ContentProvider {
         switch (uriMatcher.match(uri)){
             case ONE_QUERY:
                 queryBuilder.setTables(Query.TABLE_NAME);
+                queryBuilder.appendWhere(Query._ID + "=" + uri.getLastPathSegment());
                 break;
             case QUERIES:
                 queryBuilder.setTables(Query.TABLE_NAME);
-                queryBuilder.appendWhere(Query._ID + "=" + uri.getLastPathSegment());
                 break;
             default:
                 throw new UnsupportedOperationException(getContext().getString(R.string.invalid_query_uri) + uri);

@@ -39,7 +39,7 @@ public class QueriesListRecyclerViewAdapter extends RecyclerView.Adapter<Queries
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         cursor.moveToPosition(position);
-        holder.setRowID(position);
+        holder.setRowID(Integer.parseInt(cursor.getString(cursor.getColumnIndex(DatabaseDescription.Query._ID))));
 
         holder.text_view_for_name.setText(cursor.getString(cursor.getColumnIndex(DatabaseDescription.Query.QUERY_NAME)));
 

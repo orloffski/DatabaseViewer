@@ -39,12 +39,14 @@
 
         <provider
             android:name=".SQLiteData.DatabaseViewerContentProvider"
-            android:authorities="DatabaseDescription.AUTHORITY"
+            android:authorities="by.madcat.development.databaseviewer.SQLiteData"
             android:enabled="true"
             android:exported="false">
         </provider>
 
         <activity android:name=".QueriesListActivity">
+        </activity>
+        <activity android:name=".QueryActivity">
         </activity>
     </application>
 

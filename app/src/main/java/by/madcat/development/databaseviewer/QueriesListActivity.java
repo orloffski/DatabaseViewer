@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import by.madcat.development.databaseviewer.Adapters.QueriesListRecyclerViewAdapter;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
@@ -25,6 +27,8 @@ public class QueriesListActivity extends AppCompatActivity
     private QueriesListRecyclerViewAdapter adapter;
     private String databaseName;
 
+    private FloatingActionButton queryAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +41,23 @@ public class QueriesListActivity extends AppCompatActivity
         queriesList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         queriesList.setHasFixedSize(true);
 
-        adapter = new QueriesListRecyclerViewAdapter(this, this);
+        queryAdd = (FloatingActionButton)findViewById(R.id.query_add);
+        queryAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = QueryActivity.getIntent(getApplicationContext(), databaseName, 0, QueryActivity.QUERY_ADD);
+                startActivity(intent);
+            }
+        });
+
+        adapter = new QueriesListRecyclerViewAdapter(new QueriesListRecyclerViewAdapter.ClickListener(){
+            @Override
+            public void onClick(Uri queryUri) {
+                Intent intent = QueryActivity.getIntent(getApplicationContext(), databaseName,
+                        Integer.parseInt(queryUri.getLastPathSegment()), QueryActivity.QUERY_EDIT);
+                startActivity(intent);
+            }
+        }, this);
 
         queriesList.setAdapter(adapter);
 

@@ -1,4 +1,4 @@
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_queries_list"
@@ -15,4 +15,12 @@
         android:layout_height="match_parent"
         android:id="@+id/queriesList"/>
 
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        android:id="@+id/query_add"/>
+
+</android.support.design.widget.CoordinatorLayout>

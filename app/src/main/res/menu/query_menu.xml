@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/query_save"
+        android:orderInCategory="100"
+        android:title="Save query"
+        android:showAsAction="always"/>
+</menu>

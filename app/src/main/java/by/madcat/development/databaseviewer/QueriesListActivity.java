@@ -18,7 +18,7 @@ import by.madcat.development.databaseviewer.Adapters.QueriesListRecyclerViewAdap
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
 
 public class QueriesListActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, QueriesListRecyclerViewAdapter.ClickListener {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int QUERIES_LOADER = 0;
     public static final String DATABASE_NAME = "database_name";
@@ -57,7 +57,7 @@ public class QueriesListActivity extends AppCompatActivity
                         Integer.parseInt(queryUri.getLastPathSegment()), QueryActivity.QUERY_EDIT);
                 startActivity(intent);
             }
-        }, this);
+        }, this, databaseName);
 
         queriesList.setAdapter(adapter);
 
@@ -93,10 +93,5 @@ public class QueriesListActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
-    }
-
-    @Override
-    public void onClick(Uri queryUri) {
-
     }
 }

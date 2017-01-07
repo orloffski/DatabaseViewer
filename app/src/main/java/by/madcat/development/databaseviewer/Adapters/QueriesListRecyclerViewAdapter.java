@@ -1,6 +1,7 @@
 package by.madcat.development.databaseviewer.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import by.madcat.development.databaseviewer.QueryActivity;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription;
 
@@ -24,10 +26,12 @@ public class QueriesListRecyclerViewAdapter extends RecyclerView.Adapter<Queries
     protected Cursor cursor;
     protected Context context;
     private final ClickListener clickListener;
+    private String databaseName;
 
-    public QueriesListRecyclerViewAdapter(ClickListener clickListener, Context context){
+    public QueriesListRecyclerViewAdapter(ClickListener clickListener, Context context, String databaseName){
         this.clickListener = clickListener;
         this.context = context;
+        this.databaseName = databaseName;
     }
 
     @Override
@@ -53,8 +57,14 @@ public class QueriesListRecyclerViewAdapter extends RecyclerView.Adapter<Queries
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_edit:
+                                Intent intent = QueryActivity.getIntent(context, databaseName,
+                                        (int)holder.rowID, QueryActivity.QUERY_EDIT);
+                                context.startActivity(intent);
                                 return true;
                             case R.id.action_delete:
+                                context.getContentResolver().delete(
+                                        DatabaseDescription.Query.buildQueriesUri(holder.rowID), null, null);
+                                //notifyDataSetChanged();
                                 return true;
                             default:
                         }

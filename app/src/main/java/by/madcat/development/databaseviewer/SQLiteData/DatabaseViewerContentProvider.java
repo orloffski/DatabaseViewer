@@ -46,6 +46,9 @@ public class DatabaseViewerContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException(getContext().getString(R.string.invalid_delete_uri) + uri);
         }
 
+        if(numberOfRowsDeleted != 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+
         return numberOfRowsDeleted;
     }
 

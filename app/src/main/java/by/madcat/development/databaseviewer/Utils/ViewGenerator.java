@@ -334,4 +334,37 @@ public class ViewGenerator {
 
         return InputType.TYPE_CLASS_TEXT;
     }
+
+    public static final void createResultsetRows(Context context, TableLayout recordLayout, ArrayList<ArrayList<String>> data){
+        int counter = 0;
+
+        for(int i = 0; i < data.size(); i++){
+            ArrayList<String> dataLine= data.get(i);
+
+            TableRow row = new TableRow(context);
+
+            for(String lineValue: dataLine){
+                TextView fieldView = new TextView(context);
+                fieldView.setText(lineValue);
+                fieldView.setTextColor(Color.BLACK);
+
+                if(i == 0){
+                    fieldView.setTypeface(Typeface.DEFAULT_BOLD);
+                    fieldView.setBackgroundColor(Color.GRAY);
+                }
+
+                fieldView.setPadding(0, 0, 20, 0);
+
+                row.addView(fieldView);
+            }
+
+            if(counter%2 == 0)
+                row.setBackgroundColor(Color.rgb(233,233,233));
+
+            recordLayout.addView(row,
+                    new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            counter++;
+        }
+    }
 }

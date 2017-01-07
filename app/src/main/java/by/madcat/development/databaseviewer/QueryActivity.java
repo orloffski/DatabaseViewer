@@ -18,10 +18,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
@@ -29,6 +36,8 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
+import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
+import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
 public class QueryActivity extends AbstractApplicationActivity implements LoaderManager.LoaderCallbacks<Cursor>, DataReceiver {
 
@@ -47,7 +56,6 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
 
     private EditText queryText;
     private EditText queryName;
-    private TextView dataTextView;
     private FrameLayout resultFrameLayout;
     private FloatingActionButton queryRun;
 
@@ -62,7 +70,6 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
 
         queryText = (EditText)findViewById(R.id.query_text);
         queryName = (EditText)findViewById(R.id.query_name);
-        dataTextView = (TextView)findViewById(R.id.dataTextView);
         resultFrameLayout = (FrameLayout)findViewById(R.id.result_frame);
 
         setTitle("Query to database '" + databaseName + "'");
@@ -70,7 +77,7 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
         queryRun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataTextView.setText("");
+                resultFrameLayout.removeAllViews();
 
                 ConnectModel connectModel = ConnectModel.getInstance("", "", "");
                 Intent intent = new Intent(QueryActivity.this, RequestService.class);
@@ -193,7 +200,27 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
 
     @Override
     public void sendDataFromServer(String jsonArrayData) {
-        dataTextView.setText(jsonArrayData);
+        ArrayList<ArrayList<String>> data = new ArrayList<>();
+        ArrayList<String> resultSetKeys = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayData);
+            for(int i = 0; i < jsonArray.length(); i++){
+                if(i == 0) {
+                    resultSetKeys = SqlJsonUtils.getJsonKeys(jsonArray.getJSONObject(i));
+                    data.add(resultSetKeys);
+                }
+
+                data.add(SqlJsonUtils.getJsonValues(jsonArray.getJSONObject(i), resultSetKeys));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        TableLayout recordLayout = new TableLayout(this);
+        resultFrameLayout.addView(recordLayout,
+                new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
+
+        ViewGenerator.createResultsetRows(this, recordLayout, data);
     }
 
     @Override

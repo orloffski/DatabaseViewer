@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
@@ -59,5 +61,26 @@ public class SqlJsonUtils {
         }
 
         return tableMetadata;
+    }
+
+    public static final ArrayList<String> getJsonKeys(JSONObject jsonObject){
+        Iterator keysIterator = jsonObject.keys();
+        ArrayList<String> keysList = new ArrayList<>();
+
+        while(keysIterator.hasNext()){
+            String key = (String) keysIterator.next();
+            keysList.add(key);
+        }
+
+        return keysList;
+    }
+
+    public static final ArrayList<String> getJsonValues(JSONObject jsonObject, ArrayList<String> keys) throws JSONException {
+        ArrayList<String> valuesList = new ArrayList<>();
+
+        for(String key: keys)
+            valuesList.add(jsonObject.getString(key));
+
+        return valuesList;
     }
 }

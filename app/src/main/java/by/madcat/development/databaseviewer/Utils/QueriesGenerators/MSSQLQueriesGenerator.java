@@ -127,4 +127,8 @@ public class MSSQLQueriesGenerator {
     public static final String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString){
         return String.format(MSSQLQueriesPartsList.RECORD_UPDATE, databaseName, tableName, updateColumnsString, updateRecordKeyString);
     }
+
+    public static final String userQuery(String databaseName, String userQueryString){
+        return String.format(MSSQLQueriesPartsList.QUERY, databaseName, userQueryString);
+    }
 }

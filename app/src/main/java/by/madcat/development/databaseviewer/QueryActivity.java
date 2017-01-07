@@ -5,21 +5,32 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
+import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
+import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 
-public class QueryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class QueryActivity extends AbstractApplicationActivity implements LoaderManager.LoaderCallbacks<Cursor>, DataReceiver {
 
     private static final int QUERIES_LOADER = 0;
     public static final String DATABASE_NAME = "database_name";
@@ -36,7 +47,9 @@ public class QueryActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private EditText queryText;
     private EditText queryName;
+    private TextView dataTextView;
     private FrameLayout resultFrameLayout;
+    private FloatingActionButton queryRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +62,42 @@ public class QueryActivity extends AppCompatActivity implements LoaderManager.Lo
 
         queryText = (EditText)findViewById(R.id.query_text);
         queryName = (EditText)findViewById(R.id.query_name);
+        dataTextView = (TextView)findViewById(R.id.dataTextView);
         resultFrameLayout = (FrameLayout)findViewById(R.id.result_frame);
 
         setTitle("Query to database '" + databaseName + "'");
+        queryRun = (FloatingActionButton)findViewById(R.id.query_run);
+        queryRun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataTextView.setText("");
+
+                ConnectModel connectModel = ConnectModel.getInstance("", "", "");
+                Intent intent = new Intent(QueryActivity.this, RequestService.class);
+                intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
+                intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
+                intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
+                intent.putExtra(RequestService.EXECUTE_MODEL, 2);
+
+                connectModel.setUserRequestToServer(MSSQLQueriesGenerator.userQuery(databaseName, queryText.getText().toString()));
+
+                startService(intent);
+            }
+        });
 
         if(id != 0) {
             uri = Query.buildQueriesUri(id);
             getLoaderManager().initLoader(QUERIES_LOADER, null, this);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        broadcastReceiver = new ServerRequestBroadcastReceiver(this);
+        IntentFilter intentFilter = new IntentFilter(ServerRequestBroadcastReceiver.BROADCAST_ACTION);
+        broadcastReceiver.register(getApplicationContext(), intentFilter);
     }
 
     @Override
@@ -137,6 +178,26 @@ public class QueryActivity extends AppCompatActivity implements LoaderManager.Lo
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void sendErrorMessage(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void sendConnectConfirmation() {
+
+    }
+
+    @Override
+    public void sendDataFromServer(String jsonArrayData) {
+        dataTextView.setText(jsonArrayData);
+    }
+
+    @Override
+    public void sendQueryExecutedNoResult() {
 
     }
 }

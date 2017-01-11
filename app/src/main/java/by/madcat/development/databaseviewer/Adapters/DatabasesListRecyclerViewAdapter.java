@@ -8,11 +8,11 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.AddEditDatabaseActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.AddEditDatabaseActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.TablesListActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.TablesListActivity;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{

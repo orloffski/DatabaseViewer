@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer;
+package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.Query;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;

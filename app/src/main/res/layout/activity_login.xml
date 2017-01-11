@@ -6,7 +6,7 @@
     android:id="@+id/activity_server_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="by.madcat.development.databaseviewer.LoginActivity">
+    tools:context="by.madcat.development.databaseviewer.ActivitiesUI.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -38,7 +38,7 @@
                 android:ems="10"
                 android:id="@+id/serverIpAdress"
                 android:hint="input DB server ip"
-                android:text="192.168.0.102"/>
+                android:text="192.168.1.3"/>
 
             <EditText
                 android:layout_width="match_parent"

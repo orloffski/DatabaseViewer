@@ -8,10 +8,10 @@ import android.widget.PopupMenu;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.AddEditTableActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.AddEditTableActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.RecordsListActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.RecordsListActivity;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesPartsList;
 

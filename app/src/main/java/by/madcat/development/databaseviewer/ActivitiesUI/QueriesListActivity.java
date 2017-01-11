@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer;
+package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import by.madcat.development.databaseviewer.Adapters.QueriesListRecyclerViewAdapter;
+import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
 
 public class QueriesListActivity extends AppCompatActivity

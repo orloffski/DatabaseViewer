@@ -27,7 +27,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import by.madcat.development.databaseviewer.AddEditRecordActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.AddEditRecordActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;

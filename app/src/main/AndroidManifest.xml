@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".ActivitiesUI.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -24,17 +24,17 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".DataBasesListActivity">
+        <activity android:name=".ActivitiesUI.DataBasesListActivity">
         </activity>
-        <activity android:name=".AddEditDatabaseActivity">
+        <activity android:name=".ActivitiesUI.AddEditDatabaseActivity">
         </activity>
-        <activity android:name=".TablesListActivity">
+        <activity android:name=".ActivitiesUI.TablesListActivity">
         </activity>
-        <activity android:name=".AddEditTableActivity">
+        <activity android:name=".ActivitiesUI.AddEditTableActivity">
         </activity>
-        <activity android:name=".RecordsListActivity">
+        <activity android:name=".ActivitiesUI.RecordsListActivity">
         </activity>
-        <activity android:name=".AddEditRecordActivity">
+        <activity android:name=".ActivitiesUI.AddEditRecordActivity">
         </activity>
 
         <provider
@@ -44,9 +44,9 @@
             android:exported="false">
         </provider>
 
-        <activity android:name=".QueriesListActivity">
+        <activity android:name=".ActivitiesUI.QueriesListActivity">
         </activity>
-        <activity android:name=".QueryActivity">
+        <activity android:name=".ActivitiesUI.QueryActivity">
         </activity>
     </application>
 

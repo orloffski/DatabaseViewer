@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer;
+package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,6 +18,7 @@ import by.madcat.development.databaseviewer.Adapters.DatabasesListRecyclerViewAd
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 

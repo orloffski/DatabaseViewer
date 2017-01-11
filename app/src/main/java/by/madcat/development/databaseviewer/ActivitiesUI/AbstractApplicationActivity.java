@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer;
+package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.support.v7.app.AppCompatActivity;
 

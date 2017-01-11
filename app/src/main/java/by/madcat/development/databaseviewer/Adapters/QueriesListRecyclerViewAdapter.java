@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import by.madcat.development.databaseviewer.QueryActivity;
+import by.madcat.development.databaseviewer.ActivitiesUI.QueryActivity;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription;
 

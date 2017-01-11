@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.R;
 
-public abstract class AbstractListRecyclerViewAdapter extends RecyclerView.Adapter<DatabasesListRecyclerViewAdapter.ViewHolder>{
+public abstract class AbstractListRecyclerViewAdapter extends RecyclerView.Adapter<AbstractListRecyclerViewAdapter.ViewHolder>{
 
     protected Context context;
     protected ArrayList<String> namesList;

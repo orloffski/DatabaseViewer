@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer;
+package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,6 +17,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
 public class LoginActivity extends AbstractApplicationActivity implements DataReceiver {

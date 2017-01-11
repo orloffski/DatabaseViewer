@@ -355,7 +355,7 @@ public class ViewGenerator {
 
                 fieldView.setPadding(0, 0, 20, 0);
 
-                row.addView(fieldView);
+                row.addView(fieldView, new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
             }
 
             if(counter%2 == 0)

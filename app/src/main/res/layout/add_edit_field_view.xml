@@ -1,0 +1,49 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Field name"
+        android:paddingRight="10dp"
+        android:inputType="text"
+        android:id="@+id/fieldName"
+        android:paddingBottom="10dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Lenght"
+        android:paddingRight="10dp"
+        android:inputType="number"
+        android:enabled="false"
+        android:id="@+id/fieldLenght"
+        android:paddingBottom="10dp"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:id="@+id/typesSpinner"
+        android:paddingBottom="10dp"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Primary key"
+        android:paddingRight="10dp"
+        android:id="@+id/primaryKeyChb"
+        android:paddingBottom="10dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deleteFieldButton"
+        android:paddingBottom="10dp"/>
+
+</LinearLayout>

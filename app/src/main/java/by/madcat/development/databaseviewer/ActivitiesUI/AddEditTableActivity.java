@@ -148,19 +148,19 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         for(int i = 0; i < fieldsLinearLayoutCount; i++){
             LinearLayout field = (LinearLayout) fieldsLinearLayout.getChildAt(i);
 
-            String fieldName = ((EditText)field.getChildAt(0)).getText().toString();
+            String fieldName = ((EditText)field.findViewById(R.id.fieldName)).getText().toString();
 
             SqlTypes[] types = SqlTypes.values();
-            int position = ((Spinner)field.getChildAt(2)).getSelectedItemPosition();
+            int position = ((Spinner)field.findViewById(R.id.typesSpinner)).getSelectedItemPosition();
             String type = types[position].toString();
             SqlTypes fieldType = SqlTypes.valueOf(type);
 
             int length = 0;
             if(types[position].equals(SqlTypes.VARCHAR))
-                length = ((EditText)field.getChildAt(1)).getText().toString().equals("") ? 0 : Integer.parseInt(((EditText)field.getChildAt(1)).getText().toString());
+                length = ((EditText)field.findViewById(R.id.fieldLenght)).getText().toString().equals("") ? 0 : Integer.parseInt(((EditText)field.findViewById(R.id.fieldLenght)).getText().toString());
 
             boolean primaryKey;
-            if(((CheckBox)field.getChildAt(3)).isChecked())
+            if(((CheckBox)field.findViewById(R.id.primaryKeyChb)).isChecked())
                 primaryKey = true;
             else
                 primaryKey = false;
@@ -177,20 +177,20 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         for(int i = 0; i < fieldsLinearLayoutCount; i++){
             LinearLayout field = (LinearLayout) fieldsLinearLayout.getChildAt(i);
 
-            String fieldName = ((EditText)field.getChildAt(0)).getText().toString();
+            String fieldName = ((EditText)field.findViewById(R.id.fieldName)).getText().toString();
             stringBuilder.append(fieldName).append(" ");
 
             SqlTypes[] types = SqlTypes.values();
-            int position = ((Spinner)field.getChildAt(2)).getSelectedItemPosition();
+            int position = ((Spinner)field.findViewById(R.id.typesSpinner)).getSelectedItemPosition();
             String fieldType = types[position].toString();
             if(types[position].equals(SqlTypes.VARCHAR)){
-                int length = Integer.parseInt(((EditText)field.getChildAt(1)).getText().toString());
+                int length = Integer.parseInt(((EditText)field.findViewById(R.id.fieldLenght)).getText().toString());
                 stringBuilder.append(fieldType).append("(").append(String.valueOf(length)).append(")");
             }else{
                 stringBuilder.append(fieldType);
             }
 
-            if(((CheckBox)field.getChildAt(3)).isChecked())
+            if(((CheckBox)field.findViewById(R.id.primaryKeyChb)).isChecked())
                 primaryKey = MSSQLQueriesGenerator.getPrimaryKeyPart(fieldName);
 
             if(i != fieldsLinearLayoutCount - 1 || !primaryKey.equals(""))
@@ -199,7 +199,6 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
         if(!primaryKey.equals(""))
             stringBuilder.append(primaryKey);
-
 
         connectModel.setUserRequestToServer(
                 MSSQLQueriesGenerator.createTable(dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));

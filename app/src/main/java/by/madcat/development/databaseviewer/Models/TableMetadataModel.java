@@ -1,12 +1,10 @@
 package by.madcat.development.databaseviewer.Models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
-public class TableMetadataModel {
+public class TableMetadataModel implements Cloneable{
     private String tableName;
     private ArrayList<Fields> fieldsList;
 
@@ -25,6 +23,10 @@ public class TableMetadataModel {
         return tableName;
     }
 
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
     public ArrayList<Fields> getFieldsList() {
         return fieldsList;
     }
@@ -34,12 +36,26 @@ public class TableMetadataModel {
         private SqlTypes type;
         private int length;
         private boolean primaryKey;
+        private boolean fieldToDelete;
 
         public Fields(String name, SqlTypes type, int length, boolean isKey){
             this.fieldName = name;
             this.type = type;
             this.length = length;
             this.primaryKey = isKey;
+            this.fieldToDelete = false;
+        }
+
+        private void setFieldName(String fieldName) {
+            this.fieldName = fieldName;
+        }
+
+        private void setType(SqlTypes type) {
+            this.type = type;
+        }
+
+        private void setLength(int length) {
+            this.length = length;
         }
 
         public String getFieldName() {
@@ -58,6 +74,10 @@ public class TableMetadataModel {
             return primaryKey;
         }
 
+        public boolean isFieldToDelete() {
+            return fieldToDelete;
+        }
+
         @Override
         public boolean equals(Object obj) {
             Fields otherFields = (Fields) obj;
@@ -69,12 +89,42 @@ public class TableMetadataModel {
             }
 
             if(this.isPrimaryKey() && otherFields.isPrimaryKey()) {
-                Log.d("payment", "not equals");
                 return false;
             }
 
             return true;
         }
+    }
+
+    public void setFieldToDeleteByName(String fieldName){
+        Fields field = getFieldByName(fieldName);
+
+        if(field != null)
+            field.fieldToDelete = true;
+    }
+
+    public void updateField(String name, SqlTypes type, int length){
+        Fields field = getFieldByName(name);
+
+        if(field != null){
+            field.setFieldName(name);
+            field.setType(type);
+            field.setLength(length);
+        }
+    }
+
+    public Fields getFieldByName(String fieldName){
+        Fields field = null;
+
+        for(int i = 0; i < this.getFieldsList().size(); i++){
+            if(this.getFieldsList().get(i).getFieldName().equals(fieldName))
+                field = this.getFieldsList().get(i);
+        }
+
+        if(field != null)
+            return field;
+
+        return null;
     }
 
     @Override
@@ -94,6 +144,21 @@ public class TableMetadataModel {
     }
 
     @Override
+    public TableMetadataModel clone() {
+        TableMetadataModel newTableMetadata;
+
+        newTableMetadata = new TableMetadataModel(this.getTableName());
+
+        for(int i = 0; i < this.getFieldsList().size(); i++){
+            Fields field = this.getFieldsList().get(i);
+
+            newTableMetadata.addNewField(field.getFieldName(), field.getType(), field.getLength(), field.isPrimaryKey());
+        }
+
+        return newTableMetadata;
+    }
+
+    @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -106,6 +171,7 @@ public class TableMetadataModel {
             stringBuilder.append(" fieldType: ").append(this.fieldsList.get(i).getType());
             stringBuilder.append(" fieldLength: ").append(this.fieldsList.get(i).getLength());
             stringBuilder.append(" fieldPrimaryKey: ").append(this.fieldsList.get(i).isPrimaryKey());
+            stringBuilder.append(" fieldToDelete: ").append(this.fieldsList.get(i).isFieldToDelete());
         }
 
         return stringBuilder.toString();

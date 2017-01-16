@@ -40,8 +40,6 @@ public class MSSQLQueriesGenerator {
     }
 
     public static final String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName){
-        int counter;
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(MSSQLQueriesPartsList.BEGIN_TRANSACTION);
         stringBuilder.append(String.format(MSSQLQueriesPartsList.DB_SELECT, databaseName));
@@ -49,57 +47,61 @@ public class MSSQLQueriesGenerator {
         if(!oldTable.getTableName().equals(newTable.getTableName()))
             stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_NAME, tableName, newTable.getTableName()));
 
-        counter = oldTable.getFieldsList().size();
-
-        if(counter > newTable.getFieldsList().size()) {
-            counter = newTable.getFieldsList().size();
-        }
-
-        for(int i = 0; i < counter; i++){
-            if(!oldTable.getFieldsList().get(i).getFieldName().equals(newTable.getFieldsList().get(i).getFieldName())){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_RENAME,
-                        newTable.getTableName(),
-                        oldTable.getFieldsList().get(i).getFieldName(),
-                        newTable.getFieldsList().get(i).getFieldName()));
-            }
-
-            if(!oldTable.getFieldsList().get(i).getType().equals(newTable.getFieldsList().get(i).getType())){
-                String type = "";
-                if(newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
-                    type = SqlTypes.VARCHAR.toString() + "(" + newTable.getFieldsList().get(i).getLength() + ")";
-                }else{
-                    type = newTable.getFieldsList().get(i).getType().toString();
+        for(int i = 0; i < oldTable.getFieldsList().size(); i++){
+            if(newTable.getFieldsList().get(i).isFieldToDelete()){
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(
+                        String.format(MSSQLQueriesPartsList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
+            }else{
+                if(!oldTable.getFieldsList().get(i).getFieldName().equals(newTable.getFieldsList().get(i).getFieldName())){
+                    stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_RENAME,
+                            newTable.getTableName(),
+                            oldTable.getFieldsList().get(i).getFieldName(),
+                            newTable.getFieldsList().get(i).getFieldName()));
                 }
 
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
-                        newTable.getTableName(),
-                        newTable.getFieldsList().get(i).getFieldName(),
-                        type));
-            }
+                if(!oldTable.getFieldsList().get(i).getType().equals(newTable.getFieldsList().get(i).getType())){
+                    String type = "";
+                    if(newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
+                        type = SqlTypes.VARCHAR.toString() + "(" + newTable.getFieldsList().get(i).getLength() + ")";
+                    }else{
+                        type = newTable.getFieldsList().get(i).getType().toString();
+                    }
 
-            if(oldTable.getFieldsList().get(i).getLength() != newTable.getFieldsList().get(i).getLength() && newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
+                    stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                            newTable.getTableName(),
+                            newTable.getFieldsList().get(i).getFieldName(),
+                            type));
+                }
+
+                if(oldTable.getFieldsList().get(i).getLength() != newTable.getFieldsList().get(i).getLength() && newTable.getFieldsList().get(i).getType().equals(SqlTypes.VARCHAR)){
+                    String length = newTable.getFieldsList().get(i).getType().toString() +
+                            "(" +
+                            newTable.getFieldsList().get(i).getLength() +
+                            ")";
+                    stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
+                            newTable.getTableName(),
+                            newTable.getFieldsList().get(i).getFieldName(),
+                            length));
+                }
+            }
+        }
+
+        for(int i = oldTable.getFieldsList().size(); i < newTable.getFieldsList().size(); i++){
+            if(newTable.getFieldsList().get(i).getLength() != 0){
                 String length = newTable.getFieldsList().get(i).getType().toString() +
                         "(" +
                         newTable.getFieldsList().get(i).getLength() +
                         ")";
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_CHANGE_FIELD_TYPE,
-                        newTable.getTableName(),
-                        newTable.getFieldsList().get(i).getFieldName(),
-                        length));
-            }
-        }
-
-        if(newTable.getFieldsList().size() < oldTable.getFieldsList().size()){
-            for(int i = counter; i < oldTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_DELETE_FIELD, oldTable.getFieldsList().get(i).getFieldName()));
-            }
-        }else{
-            for(int i = counter; i < newTable.getFieldsList().size(); i++){
-                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
                 stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_ADD_FIELD,
                         newTable.getFieldsList().get(i).getFieldName(),
                         newTable.getFieldsList().get(i).getType()));
+                stringBuilder.append(length).append(";");
+            }else{
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT, newTable.getTableName()));
+                stringBuilder.append(String.format(MSSQLQueriesPartsList.TABLE_EDIT_ADD_FIELD,
+                        newTable.getFieldsList().get(i).getFieldName(),
+                        newTable.getFieldsList().get(i).getType())).append(";");
             }
         }
 

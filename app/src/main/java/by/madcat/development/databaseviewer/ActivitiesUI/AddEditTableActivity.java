@@ -24,7 +24,7 @@ import by.madcat.development.databaseviewer.Utils.SqlTypes;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
-public class AddEditTableActivity extends AbstractApplicationActivity implements DataReceiver {
+public class AddEditTableActivity extends AbstractApplicationActivity implements DataReceiver, AddEditFieldView.FieldDeleted {
 
     public static final String TABLE_ACTION = "table_action";
     public static final String TABLE_NAME = "table_name";
@@ -84,6 +84,8 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         createTable();
                         break;
                     case TABLE_EDIT:
+                        checkChangesNewTableMetadata();
+
                         if(checkTableToEdit())
                             connectModel.setUserRequestToServer(MSSQLQueriesGenerator.changeTable(
                                     oldTable, newTable, dbName, tableName));
@@ -93,6 +95,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         break;
                 }
 
+                //Log.d("payment", connectModel.getUserRequestToServer());
                 startService(intent);
             }
         });
@@ -102,7 +105,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         addFieldButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewGenerator.addNewFieldInMainView(getApplicationContext(), fieldsLinearLayout);
+                ViewGenerator.addNewFieldInMainView(getApplicationContext(), fieldsLinearLayout, AddEditTableActivity.this);
             }
         });
 
@@ -131,8 +134,6 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
     }
 
     private boolean checkTableToEdit(){
-        createNewTableMetadata();
-
         if(!oldTable.equals(newTable)) {
             return true;
         }
@@ -140,8 +141,8 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         return false;
     }
 
-    private void createNewTableMetadata(){
-        newTable = new TableMetadataModel(tableNameEditText.getText().toString());
+    private void checkChangesNewTableMetadata(){
+        newTable.setTableName(tableNameEditText.getText().toString());
 
         int fieldsLinearLayoutCount = fieldsLinearLayout.getChildCount();
 
@@ -165,7 +166,10 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             else
                 primaryKey = false;
 
-            newTable.addNewField(fieldName, fieldType, length, primaryKey);
+            if(newTable.getFieldByName(fieldName) != null)
+                newTable.updateField(fieldName, fieldType, length);
+            else
+                newTable.addNewField(fieldName, fieldType, length, primaryKey);
         }
     }
 
@@ -238,7 +242,8 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
     @Override
     public void sendDataFromServer(String jsonArrayData) {
         oldTable = SqlJsonUtils.createTableMetadata(jsonArrayData, tableName, PrimaryKeysModel.getInstance());
-        ViewGenerator.addIssetFieldsInMainView(getApplicationContext(), fieldsLinearLayout, oldTable.getFieldsList());
+        newTable = oldTable.clone();
+        ViewGenerator.addIssetFieldsInMainView(getApplicationContext(), fieldsLinearLayout, oldTable.getFieldsList(), this);
     }
 
     @Override
@@ -254,5 +259,11 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                 break;
         }
         this.finish();
+    }
+
+    @Override
+    public void fieldToDelete(String fieldName) {
+        if(newTable.getFieldByName(fieldName) != null)
+            newTable.setFieldToDeleteByName(fieldName);
     }
 }

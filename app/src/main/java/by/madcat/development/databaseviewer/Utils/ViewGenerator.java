@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import by.madcat.development.databaseviewer.ActivitiesUI.AddEditFieldView;
+import by.madcat.development.databaseviewer.ActivitiesUI.AddEditFieldView.FieldDeleted;
 import by.madcat.development.databaseviewer.ActivitiesUI.AddEditRecordActivity;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
@@ -37,30 +38,30 @@ import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueries
 public class ViewGenerator {
     static int primaryKeyNumber = -1;
 
-    public static final void addNewFieldInMainView(final Context context, final LinearLayout mainView){
+    public static final void addNewFieldInMainView(final Context context, final LinearLayout mainView, FieldDeleted fieldDeleted){
         final int wrapContent = ViewGroup.LayoutParams.WRAP_CONTENT;
         int matchParent = ViewGroup.LayoutParams.MATCH_PARENT;
         LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(matchParent, wrapContent);
 
-        mainView.addView(generateNewFieldView(context, mainView), lParams);
+        mainView.addView(generateNewFieldView(context, mainView, fieldDeleted), lParams);
     }
 
-    public static final View generateNewFieldView(final Context context, final LinearLayout mainView){
-        return new AddEditFieldView(context, mainView);
+    public static final View generateNewFieldView(final Context context, final LinearLayout mainView, FieldDeleted fieldDeleted){
+        return new AddEditFieldView(context, mainView, fieldDeleted);
     }
 
-    public static final void addIssetFieldsInMainView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
-        ArrayList<View> views = generateIssetFieldsView(context, mainView, fieldsArrayList);
+    public static final void addIssetFieldsInMainView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList, FieldDeleted fieldDeleted){
+        ArrayList<View> views = generateIssetFieldsView(context, mainView, fieldsArrayList, fieldDeleted);
 
         for(View view : views)
             mainView.addView(view);
     }
 
-    public static final ArrayList<View> generateIssetFieldsView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList){
+    public static final ArrayList<View> generateIssetFieldsView(final Context context, final LinearLayout mainView, ArrayList<TableMetadataModel.Fields> fieldsArrayList, FieldDeleted fieldDeleted){
         ArrayList<View> views = new ArrayList<>();
 
         for(TableMetadataModel.Fields field : fieldsArrayList){
-            View view = generateNewFieldView(context, mainView);
+            View view = generateNewFieldView(context, mainView, fieldDeleted);
 
             fillValuesInFields(view, field);
 

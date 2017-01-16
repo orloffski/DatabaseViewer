@@ -2,6 +2,7 @@ package by.madcat.development.databaseviewer.ActivitiesUI;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,8 +17,12 @@ import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
 public class AddEditFieldView extends LinearLayout{
+    public interface FieldDeleted{
+        void fieldToDelete(String fieldName);
+    }
 
     private Context context;
+    private FieldDeleted fieldDeleted;
 
     private LinearLayout mainLayout;
     private EditText fieldName;
@@ -26,10 +31,11 @@ public class AddEditFieldView extends LinearLayout{
     private CheckBox primaryKeyChb;
     private ImageButton deleteFieldButton;
 
-    public AddEditFieldView(Context context, final LinearLayout mainLayout) {
+    public AddEditFieldView(Context context, final LinearLayout mainLayout, FieldDeleted fieldDeleted) {
         super(context);
 
         this.context = context;
+        this.fieldDeleted = fieldDeleted;
         this.mainLayout = mainLayout;
 
         initFieldView();
@@ -78,6 +84,8 @@ public class AddEditFieldView extends LinearLayout{
         this.deleteFieldButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fieldDeleted.fieldToDelete(fieldName.getText().toString());
+
                 deleteFieldLine();
             }
         });

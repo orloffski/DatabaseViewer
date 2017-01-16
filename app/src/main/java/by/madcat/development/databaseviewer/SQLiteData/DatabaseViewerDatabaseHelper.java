@@ -8,7 +8,7 @@ import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.*;
 
 public class DatabaseViewerDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "DatabaseViewer.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseViewerDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -20,6 +20,7 @@ public class DatabaseViewerDatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + Query.TABLE_NAME + "(" +
                         Query._ID + " integer primary key, " +
                         Query.QUERY_NAME + " TEXT, " +
+                        Query.QUERY_DATABASE_NAME + " TEXT, " +
                         Query.QUERY_TEXT + " TEXT);";
 
         sqLiteDatabase.execSQL(CREATE_QUERIES_TABLE);

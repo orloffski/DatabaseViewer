@@ -115,6 +115,7 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
                 String message = "";
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(Query.QUERY_NAME, queryName.getText().toString());
+                contentValues.put(Query.QUERY_DATABASE_NAME, databaseName);
                 contentValues.put(Query.QUERY_TEXT, queryText.getText().toString());
 
                 switch (action){

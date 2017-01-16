@@ -75,11 +75,14 @@ public class QueriesListActivity extends AppCompatActivity
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id){
             case QUERIES_LOADER:
+                String selection = Query.QUERY_DATABASE_NAME + "=?";
+                String[] selectionArgs = new String[]{databaseName};
+
                 return new CursorLoader(this,
                         Query.CONTENT_URI,
                         null,
-                        null,
-                        null,
+                        selection,
+                        selectionArgs,
                         Query.QUERY_NAME + " COLLATE NOCASE DESC");
             default:
                 return null;

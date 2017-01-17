@@ -22,10 +22,12 @@
 
 ***
 <b>В проекте были использованы</b>
+
 RecyclerView, CardView, Custom View, Custom Adapter, Broadcast Receiver, Service, SQLite, Content Provider, Support Library. написан свой сервис для прямых запросов к БД, написан генератор View элементов полей для отображения при редактировании таблиц...
 
 ***
 <b>Актуальный релиз</b>
+
 DatabaseViewer.v.1.005.alpha (https://github.com/orloffski/DatabaseViewer/releases/tag/1.005)
 
 ***

@@ -30,7 +30,6 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.SQLiteData.DatabaseDescription.Query;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
@@ -74,14 +73,14 @@ public class QueryActivity extends AbstractApplicationActivity implements Loader
             public void onClick(View v) {
                 resultFrameLayout.removeAllViews();
 
-                ConnectModel connectModel = ConnectModel.getInstance("", "", "");
+                ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
                 Intent intent = new Intent(QueryActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());
                 intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
                 intent.putExtra(RequestService.EXECUTE_MODEL, 2);
 
-                connectModel.setUserRequestToServer(MSSQLQueriesGenerator.userQuery(databaseName, queryText.getText().toString()));
+                connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().userQuery(databaseName, queryText.getText().toString()));
 
                 startService(intent);
             }

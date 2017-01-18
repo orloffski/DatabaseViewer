@@ -17,7 +17,6 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
@@ -60,7 +59,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_table);
 
-        connectModel = ConnectModel.getInstance("", "", "");
+        connectModel = ConnectModel.getInstance("", null, "", "");
 
         action = getIntent().getIntExtra(TABLE_ACTION, 1);
         tableName = getIntent().getStringExtra(TABLE_NAME);
@@ -87,7 +86,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
                         checkChangesNewTableMetadata();
 
                         if(checkTableToEdit())
-                            connectModel.setUserRequestToServer(MSSQLQueriesGenerator.changeTable(
+                            connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().changeTable(
                                     oldTable, newTable, dbName, tableName));
                         else
                             finish();
@@ -195,7 +194,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             }
 
             if(((CheckBox)field.findViewById(R.id.primaryKeyChb)).isChecked())
-                primaryKey = MSSQLQueriesGenerator.getPrimaryKeyPart(fieldName);
+                primaryKey = connectModel.getQueriesGenerator().getPrimaryKeyPart(fieldName);
 
             if(i != fieldsLinearLayoutCount - 1 || !primaryKey.equals(""))
                 stringBuilder.append(", ");
@@ -205,7 +204,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             stringBuilder.append(primaryKey);
 
         connectModel.setUserRequestToServer(
-                MSSQLQueriesGenerator.createTable(dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
+                connectModel.getQueriesGenerator().createTable(dbName, tableNameEditText.getText().toString(), stringBuilder.toString()));
         }
 
     private void getTableMetadata(){
@@ -215,7 +214,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
         intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
 
-        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.getTableMetadata(dbName, tableName));
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getTableMetadata(dbName, tableName));
 
         startService(intent);
     }

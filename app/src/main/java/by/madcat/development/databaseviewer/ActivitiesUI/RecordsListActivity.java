@@ -20,7 +20,6 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 
 public class RecordsListActivity extends AbstractApplicationActivity implements DataReceiver {
     public static final String DATABASE_NAME = "database_name";
@@ -132,8 +131,8 @@ public class RecordsListActivity extends AbstractApplicationActivity implements 
     }
 
     private void loadRecordsList(String databaseName, String tableName){
-        ConnectModel model = ConnectModel.getInstance("", "", "");
-        model.setUserRequestToServer(MSSQLQueriesGenerator.getRecordsList(databaseName, tableName));
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getRecordsList(databaseName, tableName));
 
         Intent intent = new Intent(RecordsListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);

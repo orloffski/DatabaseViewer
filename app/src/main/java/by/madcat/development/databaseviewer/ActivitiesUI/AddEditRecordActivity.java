@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +23,6 @@ import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
@@ -65,7 +63,7 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_record);
 
-        connectModel = ConnectModel.getInstance("", "", "");
+        connectModel = ConnectModel.getInstance("", null, "", "");
 
         this.loadData = false;
 
@@ -88,10 +86,10 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
 
                 switch (action){
                     case RECORD_ADD:
-                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.insertRecords(databaseName, tableName, getFieldsValuesToInsert()));
+                        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().insertRecords(databaseName, tableName, getFieldsValuesToInsert()));
                         break;
                     case RECORD_EDIT:
-                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.updateRecord(databaseName, tableName, getFieldsValuesToUpdate(), getRecordPrimaryKeyString()));
+                        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().updateRecord(databaseName, tableName, getFieldsValuesToUpdate(), getRecordPrimaryKeyString()));
                         break;
                 }
 
@@ -104,7 +102,7 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
         intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
-        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.getTableMetadata(databaseName, tableName));
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getTableMetadata(databaseName, tableName));
         startService(intent);
 
         switch (action){
@@ -134,7 +132,7 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
         intent.putExtra(RequestService.USER_NAME, connectModel.getUserName());
         intent.putExtra(RequestService.USER_PASSWORD, connectModel.getUserPassword());
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
-        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.getRecord(databaseName, tableName, primaryKeyFieldName, primaryKeyValue));
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getRecord(databaseName, tableName, primaryKeyFieldName, primaryKeyValue));
         startService(intent);
     }
 
@@ -202,7 +200,6 @@ public class AddEditRecordActivity extends AbstractApplicationActivity implement
                 stringBuilder.append(", ");
         }
 
-        Log.d("payment", stringBuilder.toString());
         return stringBuilder.toString();
     }
 

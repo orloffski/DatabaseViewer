@@ -1,45 +1,67 @@
-package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
+package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL;
 
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
-public class MSSQLQueriesGenerator {
-    public static final String getPrimaryKeysList(String databaseName){
+public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
+
+    @Override
+    public String getPrimaryKeysList(String databaseName){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(MSSQLQueriesPartsList.PRIMARY_KEYS_STRING_1, databaseName));
         stringBuilder.append(MSSQLQueriesPartsList.PRIMARY_KEYS_STRING_2);
         return stringBuilder.toString();
     }
 
-    public static final String getDatabasesList(){
+    @Override
+    public String getDatabasesList(){
         return MSSQLQueriesPartsList.DATABASES_LIST_QUERY;
     }
 
-    public static final String createDatabase(String databaseName){
+    @Override
+    public String createDatabase(String databaseName){
         return (MSSQLQueriesPartsList.DATABASE_ADD + databaseName);
     }
 
-    public static final String renameDatabase(String databaseOldName, String databaseNewName){
+    @Override
+    public String renameDatabase(String databaseOldName, String databaseNewName){
         return String.format(MSSQLQueriesPartsList.DATABASE_EDIT, databaseOldName, databaseNewName);
     }
 
-    public static final String getTablesList(String databaseName){
+    @Override
+    public String deleteDatabase(String databaseName) {
+        return (MSSQLQueriesPartsList.DATABASE_DELETE + databaseName);
+    }
+
+    @Override
+    public String getTablesList(String databaseName){
         return String.format(MSSQLQueriesPartsList.TABLES_LIST_QUERY, databaseName);
     }
 
-    public static final String getPrimaryKeyPart(String fieldName){
+    @Override
+    public String getPrimaryKeyPart(String fieldName){
         return String.format(MSSQLQueriesPartsList.TABLE_EDIT_PRIMARY_KEY, fieldName);
     }
 
-    public static final String createTable(String databaseName, String tableName, String fieldsParts){
+    @Override
+    public String createTable(String databaseName, String tableName, String fieldsParts){
         return String.format(MSSQLQueriesPartsList.TABLE_ADD, databaseName, tableName, fieldsParts);
     }
 
-    public static final String getTableMetadata(String databaseName, String tableName){
+    @Override
+    public String deleteTable(String databaseName, String tableName) {
+        return String.format(MSSQLQueriesPartsList.TABLE_DELETE,
+                databaseName, tableName);
+    }
+
+    @Override
+    public String getTableMetadata(String databaseName, String tableName){
         return String.format(MSSQLQueriesPartsList.TABLE_METADATA, databaseName, tableName);
     }
 
-    public static final String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName){
+    @Override
+    public String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(MSSQLQueriesPartsList.BEGIN_TRANSACTION);
         stringBuilder.append(String.format(MSSQLQueriesPartsList.DB_SELECT, databaseName));
@@ -110,27 +132,33 @@ public class MSSQLQueriesGenerator {
         return stringBuilder.toString();
     }
 
-    public static final String getRecordsList(String databaseName, String tableName){
+    @Override
+    public String getRecordsList(String databaseName, String tableName){
         return String.format(MSSQLQueriesPartsList.RECORDS_LIST_QUERY, databaseName, tableName);
     }
 
-    public static final String deleteRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
+    @Override
+    public String deleteRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
         return String.format(MSSQLQueriesPartsList.RECORD_DELETE, databaseName, tableName, primaryKeyFieldName, primaryKey);
     }
 
-    public static final String getRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
+    @Override
+    public String getRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey){
         return String.format(MSSQLQueriesPartsList.RECORDS, databaseName, tableName, primaryKeyFieldName, primaryKey);
     }
 
-    public static final String insertRecords(String databaseName, String tableName, String fieldsList){
+    @Override
+    public String insertRecords(String databaseName, String tableName, String fieldsList){
         return String.format(MSSQLQueriesPartsList.RECORD_INSERT, databaseName, tableName, fieldsList);
     }
 
-    public static final String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString){
+    @Override
+    public String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString){
         return String.format(MSSQLQueriesPartsList.RECORD_UPDATE, databaseName, tableName, updateColumnsString, updateRecordKeyString);
     }
 
-    public static final String userQuery(String databaseName, String userQueryString){
+    @Override
+    public String userQuery(String databaseName, String userQueryString){
         return String.format(MSSQLQueriesPartsList.QUERY, databaseName, userQueryString);
     }
 }

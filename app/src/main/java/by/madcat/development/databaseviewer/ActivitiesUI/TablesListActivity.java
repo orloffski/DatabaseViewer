@@ -24,7 +24,6 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 
 public class TablesListActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -112,8 +111,8 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
     }
 
     private void loadPrimaryKeysList(String databaseName){
-        ConnectModel model = ConnectModel.getInstance("", "", "");
-        model.setUserRequestToServer(MSSQLQueriesGenerator.getPrimaryKeysList(databaseName));
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getPrimaryKeysList(databaseName));
 
         Intent intent = new Intent(TablesListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);
@@ -121,8 +120,8 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
     }
 
     private void loadTablesList(String databaseName){
-        ConnectModel model = ConnectModel.getInstance("", "", "");
-        model.setUserRequestToServer(MSSQLQueriesGenerator.getTablesList(databaseName));
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getTablesList(databaseName));
 
         Intent intent = new Intent(TablesListActivity.this, RequestService.class);
         intent.putExtra(RequestService.EXECUTE_MODEL, 2);

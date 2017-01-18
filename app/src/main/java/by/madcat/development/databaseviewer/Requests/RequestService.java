@@ -14,11 +14,14 @@ import java.util.Properties;
 
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorFactory;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
 
 public class RequestService extends Service {
 
     public static final String SERVER_IP_ADRESS = "server_ip_adress";
+    public static final String DATABASE_TYPE = "database_type";
     public static final String USER_NAME = "user_name";
     public static final String USER_PASSWORD = "user_password";
     public static final String EXECUTE_MODEL = "execute_model";
@@ -48,9 +51,14 @@ public class RequestService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
-            model = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
-                    intent.getStringExtra(USER_NAME),
-                    intent.getStringExtra(USER_PASSWORD));
+            try {
+                model = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
+                        QueriesGeneratorFactory.getGenerator(DatabasesTypes.valueOf(intent.getStringExtra(DATABASE_TYPE))),
+                        intent.getStringExtra(USER_NAME),
+                        intent.getStringExtra(USER_PASSWORD));
+            } catch (Exception e) {
+                // to google analytics
+            }
 
             executeGetResult = intent.getIntExtra(EXECUTE_MODEL, 0);
 

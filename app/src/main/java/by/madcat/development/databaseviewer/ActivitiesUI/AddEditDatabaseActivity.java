@@ -13,7 +13,6 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.DataReceiver;
 import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroadcastReceiver;
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 
 public class AddEditDatabaseActivity extends AbstractApplicationActivity implements DataReceiver {
@@ -46,7 +45,7 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
         action = getIntent().getIntExtra(DATABASE_ACTION, 1);
         dbName = getIntent().getStringExtra(DATABASE_NAME);
 
-        connectModel = ConnectModel.getInstance("", "", "");
+        connectModel = ConnectModel.getInstance("", null, "", "");
 
         databaseName = (EditText)findViewById(R.id.text_view_for_name);
         if(action == DATABASE_EDIT) {
@@ -68,10 +67,10 @@ public class AddEditDatabaseActivity extends AbstractApplicationActivity impleme
 
                 switch (action){
                     case DATABASE_ADD:
-                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.createDatabase(databaseName.getText().toString()));
+                        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().createDatabase(databaseName.getText().toString()));
                         break;
                     case DATABASE_EDIT:
-                        connectModel.setUserRequestToServer(MSSQLQueriesGenerator.renameDatabase(dbName, databaseName.getText().toString()));
+                        connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().renameDatabase(dbName, databaseName.getText().toString()));
                         break;
                 }
 

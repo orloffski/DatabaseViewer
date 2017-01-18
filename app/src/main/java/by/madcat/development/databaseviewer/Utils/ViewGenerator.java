@@ -33,7 +33,6 @@ import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesGenerator;
 
 public class ViewGenerator {
     static int primaryKeyNumber = -1;
@@ -123,13 +122,13 @@ public class ViewGenerator {
             mainLayout.addView(textView, i, textViewParams);
         }
 
-        final String finalPrimaryKey = primaryKey;
+        final String primaryKeyValue = primaryKey;
         ImageButton deleteRecordButton = (ImageButton)mainLayout.findViewById(R.id.deleteRecordButton);
         deleteRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConnectModel model = ConnectModel.getInstance("", "", "");
-                model.setUserRequestToServer(MSSQLQueriesGenerator.deleteRecord(databaseName, tableName, primaryKeyFieldName, finalPrimaryKey));
+                ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+                connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().deleteRecord(databaseName, tableName, primaryKeyFieldName, primaryKeyValue));
 
                 Intent intent = new Intent(context, RequestService.class);
                 intent.putExtra(RequestService.EXECUTE_MODEL, 1);
@@ -146,7 +145,7 @@ public class ViewGenerator {
                         AddEditRecordActivity.RECORD_EDIT,
                         tableName,
                         databaseName,
-                        finalPrimaryKey,
+                        primaryKeyValue,
                         primaryKeyFieldName);
                 context.startActivity(intent);
             }

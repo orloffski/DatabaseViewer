@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,8 @@ import by.madcat.development.databaseviewer.BroadcastReceivers.ServerRequestBroa
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorFactory;
 
 public class LoginActivity extends AbstractApplicationActivity implements DataReceiver {
 
@@ -26,6 +30,7 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
     private AVLoadingIndicatorView progressConnect;
     private TextView connectName;
     private TextView serverIpAdress;
+    private Spinner databaseType;
     private TextView userName;
     private TextView userPassword;
     private CheckBox passwordChb;
@@ -43,6 +48,8 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
         serverIpAdress = (TextView)findViewById(R.id.serverIpAdress);
         userName = (TextView)findViewById(R.id.userName);
         userPassword = (TextView)findViewById(R.id.userPassword);
+        databaseType = (Spinner)findViewById(R.id.databaseType);
+        databaseType.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, DatabasesTypes.values()));
 
         passwordChb = (CheckBox)findViewById(R.id.passwordChb);
         passwordChb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -62,13 +69,19 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
                 progressConnect.show();
                 connectBtn.setEnabled(false);
 
-                model = ConnectModel.updateInstance(serverIpAdress.getText().toString(),
-                        userName.getText().toString(),
-                        userPassword.getText().toString());
+                try {
+                    model = ConnectModel.updateInstance(serverIpAdress.getText().toString(),
+                            QueriesGeneratorFactory.getGenerator((DatabasesTypes)databaseType.getSelectedItem()),
+                            userName.getText().toString(),
+                            userPassword.getText().toString());
+                } catch (Exception e) {
+                    // to google analytics
+                }
                 model.setUserRequestToServer(null);
 
                 Intent intent = new Intent(LoginActivity.this, RequestService.class);
                 intent.putExtra(RequestService.SERVER_IP_ADRESS, model.getServerIpAdress());
+                intent.putExtra(RequestService.DATABASE_TYPE, databaseType.getSelectedItem().toString());
                 intent.putExtra(RequestService.USER_NAME, model.getUserName());
                 intent.putExtra(RequestService.USER_PASSWORD, model.getUserPassword());
                 intent.putExtra(RequestService.EXECUTE_MODEL, 0);
@@ -86,9 +99,14 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
         progressConnect.hide();
         connectBtn.setEnabled(true);
 
-        model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
-                userName.getText().toString(),
-                userPassword.getText().toString());
+        try {
+            model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
+                    QueriesGeneratorFactory.getGenerator((DatabasesTypes)databaseType.getSelectedItem()),
+                    userName.getText().toString(),
+                    userPassword.getText().toString());
+        } catch (Exception e) {
+            // to google analytics
+        }
         model.setUserRequestToServer(null);
 
         broadcastReceiver = new ServerRequestBroadcastReceiver(this);

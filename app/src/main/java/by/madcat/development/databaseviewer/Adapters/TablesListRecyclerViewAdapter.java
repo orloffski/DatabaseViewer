@@ -13,7 +13,6 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.ActivitiesUI.RecordsListActivity;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQLQueriesPartsList;
 
 public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 
@@ -59,9 +58,8 @@ public class TablesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapt
 
                                 return true;
                             case R.id.action_delete:
-                                ConnectModel connectModel = ConnectModel.getInstance("", "", "");
-                                connectModel.setUserRequestToServer(String.format(MSSQLQueriesPartsList.TABLE_DELETE,
-                                        databaseName, holder.text_view_for_name.getText().toString()));
+                                ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+                                connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().deleteTable(databaseName, holder.text_view_for_name.getText().toString()));
 
                                 intent = new Intent(context, RequestService.class);
                                 intent.putExtra(RequestService.SERVER_IP_ADRESS, connectModel.getServerIpAdress());

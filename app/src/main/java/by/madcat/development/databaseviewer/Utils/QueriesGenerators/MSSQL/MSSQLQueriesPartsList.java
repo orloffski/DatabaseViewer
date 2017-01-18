@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
+package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL;
 
 public class MSSQLQueriesPartsList {
     // get primary keys

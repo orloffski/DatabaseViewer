@@ -36,7 +36,7 @@ public class RequestService extends Service {
 
     private int executeGetResult;
 
-    private ConnectModel model;
+    private ConnectModel connectModel;
 
     private String jsonArrayString;
 
@@ -52,7 +52,7 @@ public class RequestService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null) {
             try {
-                model = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
+                connectModel = ConnectModel.getInstance(intent.getStringExtra(SERVER_IP_ADRESS),
                         QueriesGeneratorFactory.getGenerator(DatabasesTypes.valueOf(intent.getStringExtra(DATABASE_TYPE))),
                         intent.getStringExtra(USER_NAME),
                         intent.getStringExtra(USER_PASSWORD));
@@ -89,16 +89,15 @@ public class RequestService extends Service {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
-                DbConn = DriverManager.getConnection(ConnectModel.CONNECTION_STRING + model.getServerIpAdress() + ";", getUsersProperties());
+                DbConn = connectModel.getQueriesGenerator().getConnection();
 
-                if(DbConn != null && model.getUserRequestToServer() != null){
+                if(DbConn != null && connectModel.getUserRequestToServer() != null){
                     statement = DbConn.createStatement();
                     if(executeGetResult == 2) {
-                        resultSet = statement.executeQuery(model.getUserRequestToServer());
+                        resultSet = statement.executeQuery(connectModel.getUserRequestToServer());
                         jsonArrayString = SqlJsonUtils.createJsonArrayFromResultSet(resultSet).toString();
                     }else{
-                        statement.executeUpdate(model.getUserRequestToServer());
+                        statement.executeUpdate(connectModel.getUserRequestToServer());
                     }
                 }
             } catch (Exception e) {
@@ -160,14 +159,5 @@ public class RequestService extends Service {
             }
         }
         sendBroadcast(receiveIntent);
-    }
-
-    private Properties getUsersProperties(){
-        Properties props = new Properties();
-        props.setProperty("user", model.getUserName());
-        props.setProperty("password", model.getUserPassword());
-        props.setProperty("socketTimeout", "2000");
-
-        return props;
     }
 }

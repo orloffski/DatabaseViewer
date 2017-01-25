@@ -1,8 +1,11 @@
 package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
 
+import java.sql.Connection;
+
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 
 public interface QueriesGeneratorInterface {
+    Connection getConnection() throws Exception;
     String getPrimaryKeysList(String databaseName);
     String getDatabasesList();
     String createDatabase(String databaseName);

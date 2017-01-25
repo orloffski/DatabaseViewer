@@ -1,10 +1,26 @@
 package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Properties;
+
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
 public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
+
+    @Override
+    public Connection getConnection() throws Exception {
+        Connection MSSQLConnect;
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+
+        Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
+        MSSQLConnect = DriverManager.getConnection(ConnectModel.CONNECTION_STRING + connectModel.getServerIpAdress() + ";", getUsersProperties());
+
+        return MSSQLConnect;
+    }
 
     @Override
     public String getPrimaryKeysList(String databaseName){
@@ -160,5 +176,15 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
     @Override
     public String userQuery(String databaseName, String userQueryString){
         return String.format(MSSQLQueriesPartsList.QUERY, databaseName, userQueryString);
+    }
+
+    private Properties getUsersProperties(){
+        Properties props = new Properties();
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+        props.setProperty("user", connectModel.getUserName());
+        props.setProperty("password", connectModel.getUserPassword());
+        props.setProperty("socketTimeout", "2000");
+
+        return props;
     }
 }

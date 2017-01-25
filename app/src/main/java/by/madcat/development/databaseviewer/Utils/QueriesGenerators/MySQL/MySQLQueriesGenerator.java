@@ -42,7 +42,7 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
 
     @Override
     public String createDatabase(String databaseName) {
-        return null;
+        return MySQLQueriesPartsList.DATABASE_ADD + databaseName;
     }
 
     @Override

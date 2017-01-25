@@ -29,10 +29,14 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
 
     private FloatingActionButton databaseAdd;
 
+    private ConnectModel connectModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_bases_list);
+
+        connectModel = ConnectModel.getInstance("", null, "", "");
 
         databasesList = (RecyclerView)findViewById(R.id.databases_list);
         databasesList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -57,7 +61,7 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
 
         loadDatabasesList();
 
-        setTitle("Databases list of MS SQL server on " + ConnectModel.getInstance("", null, "", "").getServerIpAdress());
+        setTitle("Databases list of " + connectModel.getQueriesGenerator().getDatabaseType() + " server on " + ConnectModel.getInstance("", null, "", "").getServerIpAdress());
     }
 
     @Override
@@ -72,7 +76,6 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
     }
 
     private void loadDatabasesList(){
-        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
         connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getDatabasesList());
 
         Intent intent = new Intent(DataBasesListActivity.this, RequestService.class);
@@ -101,7 +104,7 @@ public class DataBasesListActivity extends AbstractApplicationActivity implement
             databases.clear();
             JSONArray jsonArray = new JSONArray(jsonArrayData);
             for(int i = 0; i < jsonArray.length(); i++)
-                databases.add(jsonArray.getJSONObject(i).getString("name").toString());
+                databases.add(jsonArray.getJSONObject(i).getString(connectModel.getQueriesGenerator().getDatabaseListKey()).toString());
 
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {

@@ -1,11 +1,11 @@
 package by.madcat.development.databaseviewer.Models;
 
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 
 public class ConnectModel {
 
-    public static final String CONNECTION_STRING = "jdbc:jtds:sqlserver://";
+    public static final String MSSQL_CONNECTION_STRING = "jdbc:jtds:sqlserver://";
+    public static final String MYSQL_CONNECTION_STRING = "jdbc:mysql://";
 
     private String serverIpAdress;
     private String userName;

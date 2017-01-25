@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
@@ -17,9 +18,19 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
         ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
 
         Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
-        MSSQLConnect = DriverManager.getConnection(ConnectModel.CONNECTION_STRING + connectModel.getServerIpAdress() + ";", getUsersProperties());
+        MSSQLConnect = DriverManager.getConnection(ConnectModel.MSSQL_CONNECTION_STRING + connectModel.getServerIpAdress() + ";", getUsersProperties());
 
         return MSSQLConnect;
+    }
+
+    @Override
+    public String getDatabaseType() {
+        return DatabasesTypes.MSSQL.toString();
+    }
+
+    @Override
+    public String getDatabaseListKey() {
+        return MSSQLQueriesPartsList.DATABASE_LIST_KEY;
     }
 
     @Override

@@ -100,7 +100,7 @@ public class LoginActivity extends AbstractApplicationActivity implements DataRe
         connectBtn.setEnabled(true);
 
         try {
-            model = ConnectModel.getInstance(serverIpAdress.getText().toString(),
+            model = ConnectModel.updateInstance(serverIpAdress.getText().toString(),
                     QueriesGeneratorFactory.getGenerator((DatabasesTypes)databaseType.getSelectedItem()),
                     userName.getText().toString(),
                     userPassword.getText().toString());

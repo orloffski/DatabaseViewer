@@ -99,6 +99,8 @@ public class RequestService extends Service {
                     }else{
                         statement.executeUpdate(connectModel.getUserRequestToServer());
                     }
+                }else{
+                    throw new Exception("connection filed");
                 }
             } catch (Exception e) {
                 if(e instanceof SQLException){

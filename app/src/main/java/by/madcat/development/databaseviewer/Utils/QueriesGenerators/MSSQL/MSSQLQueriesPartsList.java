@@ -9,6 +9,7 @@ public class MSSQLQueriesPartsList {
     public static final String DATABASES_LIST_QUERY = "SELECT name FROM master.dbo.sysdatabases WHERE dbid > 4";
     // create database
     public static final String DATABASE_ADD = "CREATE DATABASE ";
+    public static final String DATABASE_LIST_KEY = "name";
     // rename database (from name 1%s to 2%s)
     public static final String DATABASE_EDIT = "ALTER DATABASE %s Modify Name = %s";
     // delete database

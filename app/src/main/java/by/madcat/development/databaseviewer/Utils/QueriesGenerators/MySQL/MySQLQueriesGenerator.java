@@ -1,0 +1,117 @@
+package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MySQL;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import by.madcat.development.databaseviewer.Models.ConnectModel;
+import by.madcat.development.databaseviewer.Models.TableMetadataModel;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
+
+public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
+    @Override
+    public Connection getConnection() throws Exception {
+        Connection MySQLConnect = null;
+        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
+
+        Class.forName("com.mysql.jdbc.Driver");
+        MySQLConnect = DriverManager.getConnection(ConnectModel.MYSQL_CONNECTION_STRING + connectModel.getServerIpAdress() + ":3306", connectModel.getUserName(), connectModel.getUserPassword());
+
+        return MySQLConnect;
+    }
+
+    @Override
+    public String getDatabaseType() {
+        return DatabasesTypes.MySQL.toString();
+    }
+
+    @Override
+    public String getDatabaseListKey() {
+        return MySQLQueriesPartsList.DATABASE_LIST_KEY;
+    }
+
+    @Override
+    public String getPrimaryKeysList(String databaseName) {
+        return null;
+    }
+
+    @Override
+    public String getDatabasesList() {
+        return MySQLQueriesPartsList.DATABASES_LIST_QUERY;
+    }
+
+    @Override
+    public String createDatabase(String databaseName) {
+        return null;
+    }
+
+    @Override
+    public String renameDatabase(String databaseOldName, String databaseNewName) {
+        return null;
+    }
+
+    @Override
+    public String deleteDatabase(String databaseName) {
+        return null;
+    }
+
+    @Override
+    public String getTablesList(String databaseName) {
+        return null;
+    }
+
+    @Override
+    public String getPrimaryKeyPart(String fieldName) {
+        return null;
+    }
+
+    @Override
+    public String createTable(String databaseName, String tableName, String fieldsParts) {
+        return null;
+    }
+
+    @Override
+    public String deleteTable(String databaseName, String tableName) {
+        return null;
+    }
+
+    @Override
+    public String getTableMetadata(String databaseName, String tableName) {
+        return null;
+    }
+
+    @Override
+    public String changeTable(TableMetadataModel oldTable, TableMetadataModel newTable, String databaseName, String tableName) {
+        return null;
+    }
+
+    @Override
+    public String getRecordsList(String databaseName, String tableName) {
+        return null;
+    }
+
+    @Override
+    public String deleteRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey) {
+        return null;
+    }
+
+    @Override
+    public String getRecord(String databaseName, String tableName, String primaryKeyFieldName, String primaryKey) {
+        return null;
+    }
+
+    @Override
+    public String insertRecords(String databaseName, String tableName, String fieldsList) {
+        return null;
+    }
+
+    @Override
+    public String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString) {
+        return null;
+    }
+
+    @Override
+    public String userQuery(String databaseName, String userQueryString) {
+        return null;
+    }
+}

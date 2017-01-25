@@ -52,7 +52,7 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
 
     @Override
     public String deleteDatabase(String databaseName) {
-        return null;
+        return MySQLQueriesPartsList.DATABASE_DELETE + databaseName;
     }
 
     @Override

@@ -8,6 +8,7 @@ public interface QueriesGeneratorInterface {
     Connection getConnection() throws Exception;
     String getDatabaseType();
     String getDatabaseListKey();
+    String getTableListKey();
     String getPrimaryKeysList(String databaseName);
     String getDatabasesList();
     String createDatabase(String databaseName);

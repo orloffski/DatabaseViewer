@@ -16,6 +16,7 @@ public class MSSQLQueriesPartsList {
     public static final String DATABASE_DELETE = "DROP DATABASE ";
     // get all tables from selected database (db name 1%s)
     public static final String TABLES_LIST_QUERY = "Use %s SELECT Name FROM dbo.sysobjects WHERE (xtype = 'U')";
+    public static final String TABLE_LIST_KEY = "Name";
     // delete table (table name 2%s from db name 1%s)
     public static final String TABLE_DELETE = "Use %s DROP TABLE %s ";
     // create table (table name 2%s in db name 1%s where fields string 3%s)

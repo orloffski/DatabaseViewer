@@ -34,6 +34,11 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
     }
 
     @Override
+    public String getTableListKey() {
+        return MSSQLQueriesPartsList.TABLE_LIST_KEY;
+    }
+
+    @Override
     public String getPrimaryKeysList(String databaseName){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(MSSQLQueriesPartsList.PRIMARY_KEYS_STRING_1, databaseName));

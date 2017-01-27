@@ -33,6 +33,7 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
 
     private String databaseName;
     private boolean loadData;
+    private ConnectModel connectModel;
 
     private RecyclerView tablesList;
     private TablesListRecyclerViewAdapter adapter;
@@ -47,6 +48,8 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
 
         this.loadData = false;
         this.databaseName = getIntent().getStringExtra(DATABASE_NAME);
+
+        connectModel = ConnectModel.getInstance("", null, "", "");
 
         tablesList = (RecyclerView)findViewById(R.id.tables_list);
         tablesList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -111,7 +114,6 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
     }
 
     private void loadPrimaryKeysList(String databaseName){
-        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
         connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getPrimaryKeysList(databaseName));
 
         Intent intent = new Intent(TablesListActivity.this, RequestService.class);
@@ -120,7 +122,6 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
     }
 
     private void loadTablesList(String databaseName){
-        ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
         connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().getTablesList(databaseName));
 
         Intent intent = new Intent(TablesListActivity.this, RequestService.class);
@@ -151,7 +152,7 @@ public class TablesListActivity extends AbstractApplicationActivity implements D
                 tables.clear();
                 JSONArray jsonArray = new JSONArray(jsonArrayData);
                 for (int i = 0; i < jsonArray.length(); i++)
-                    tables.add(jsonArray.getJSONObject(i).getString("Name").toString());
+                    tables.add(jsonArray.getJSONObject(i).getString(connectModel.getQueriesGenerator().getTableListKey()).toString());
 
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {

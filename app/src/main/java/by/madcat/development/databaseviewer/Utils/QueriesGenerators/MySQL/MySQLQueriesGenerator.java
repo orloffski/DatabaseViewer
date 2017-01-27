@@ -31,8 +31,13 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
     }
 
     @Override
+    public String getTableListKey() {
+        return (MySQLQueriesPartsList.TABLE_LIST_KEY);
+    }
+
+    @Override
     public String getPrimaryKeysList(String databaseName) {
-        return null;
+        return String.format(MySQLQueriesPartsList.PRIMARY_KEYS_STRING, databaseName);
     }
 
     @Override
@@ -57,7 +62,7 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
 
     @Override
     public String getTablesList(String databaseName) {
-        return null;
+        return String.format(MySQLQueriesPartsList.TABLES_LIST_QUERY, databaseName);
     }
 
     @Override
@@ -77,7 +82,7 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
 
     @Override
     public String getTableMetadata(String databaseName, String tableName) {
-        return null;
+        return String.format(MySQLQueriesPartsList.TABLE_METADATA, databaseName, tableName);
     }
 
     @Override

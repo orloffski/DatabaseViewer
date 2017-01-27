@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.ActivitiesUI.TablesListActivity;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
 
 public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAdapter{
 
@@ -23,6 +25,8 @@ public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final DatabasesTypes type = DatabasesTypes.valueOf(
+                ConnectModel.getInstance("", null, "", "").getQueriesGenerator().getDatabaseType());
         holder.text_view_for_name.setText(this.namesList.get(position));
 
         holder.text_view_for_name.setOnClickListener(new View.OnClickListener() {
@@ -46,12 +50,17 @@ public class DatabasesListRecyclerViewAdapter extends AbstractListRecyclerViewAd
 
                         switch (item.getItemId()) {
                             case R.id.action_edit:
-                                intent = AddEditDatabaseActivity.getIntent(
-                                        context,
-                                        AddEditDatabaseActivity.DATABASE_EDIT,
-                                        holder.text_view_for_name.getText().toString());
-                                context.startActivity(intent);
-                                return true;
+                                if(type.equals(DatabasesTypes.MSSQL)) {
+                                    intent = AddEditDatabaseActivity.getIntent(
+                                            context,
+                                            AddEditDatabaseActivity.DATABASE_EDIT,
+                                            holder.text_view_for_name.getText().toString());
+                                    context.startActivity(intent);
+                                    return true;
+                                }else if(type.equals(DatabasesTypes.MySQL)){
+                                    Toast.makeText(context, "Dont suported in MySQL", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                }
                             case R.id.action_delete:
                                 ConnectModel connectModel = ConnectModel.getInstance("", null, "", "");
                                 connectModel.setUserRequestToServer(connectModel.getQueriesGenerator().deleteDatabase(

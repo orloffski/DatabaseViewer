@@ -1,4 +1,4 @@
-package by.madcat.development.databaseviewer.Utils;
+package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL;
 
 public enum SqlTypes {
     // data

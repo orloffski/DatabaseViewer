@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.Utils.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 
 public class AddEditFieldView extends LinearLayout{
     public interface FieldDeleted{

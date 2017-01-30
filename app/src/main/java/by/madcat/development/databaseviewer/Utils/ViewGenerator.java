@@ -33,6 +33,7 @@ import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 
 public class ViewGenerator {
     static int primaryKeyNumber = -1;

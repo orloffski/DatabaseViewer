@@ -19,7 +19,7 @@ import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
-import by.madcat.development.databaseviewer.Utils.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 

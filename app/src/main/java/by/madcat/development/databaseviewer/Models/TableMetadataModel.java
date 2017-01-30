@@ -2,7 +2,7 @@ package by.madcat.development.databaseviewer.Models;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.Utils.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 
 public class TableMetadataModel implements Cloneable{
     private String tableName;

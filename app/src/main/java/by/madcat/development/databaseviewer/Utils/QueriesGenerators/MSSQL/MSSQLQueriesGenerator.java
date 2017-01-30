@@ -8,7 +8,6 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.DatabasesTypes;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
-import by.madcat.development.databaseviewer.Utils.SqlTypes;
 
 public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
 

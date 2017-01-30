@@ -34,6 +34,7 @@ import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 
 public class ViewGenerator {
     static int primaryKeyNumber = -1;
@@ -244,22 +245,15 @@ public class ViewGenerator {
         }
     }
 
-    public static final int getInputTypeBySqlType(SqlTypes type){
-        if(type.equals(SqlTypes.INT) ||
-                type.equals(SqlTypes.SMALLINT) ||
-                type.equals(SqlTypes.REAL) ||
-                type.equals(SqlTypes.MONEY) ||
-                type.equals(SqlTypes.TINYINT) ||
-                type.equals(SqlTypes.DECIMAL))
+    public static final int getInputTypeBySqlType(String type){
+        QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
+
+        if(queriesGeneratorInterface.getNumberTypes().contains(type)){
             return (InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-        else if(type.equals(SqlTypes.CHAR) ||
-                type.equals(SqlTypes.VARCHAR) ||
-                type.equals(SqlTypes.TEXT))
-            return InputType.TYPE_CLASS_TEXT;
-        else if(type.equals(SqlTypes.DATETIME) ||
-                type.equals(SqlTypes.DATE) ||
-                type.equals(SqlTypes.TIME))
+        }
+        if(queriesGeneratorInterface.getDateTimeTypes().contains(type)){
             return InputType.TYPE_CLASS_DATETIME;
+        }
 
         return InputType.TYPE_CLASS_TEXT;
     }

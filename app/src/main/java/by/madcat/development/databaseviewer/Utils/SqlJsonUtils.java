@@ -47,7 +47,7 @@ public class SqlJsonUtils {
 
             for(int i = 0; i < jsonArray.length(); i++){
                 String fieldName = jsonArray.getJSONObject(i).getString("COLUMN_NAME").toString();
-                SqlTypes type = SqlTypes.valueOf(jsonArray.getJSONObject(i).getString("DATA_TYPE").toString().toUpperCase());
+                String type = jsonArray.getJSONObject(i).getString("DATA_TYPE").toString().toUpperCase();
                 int length = jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString().equals("") ? 0 :
                         Integer.parseInt(jsonArray.getJSONObject(i).getString("CHARACTER_MAXIMUM_LENGTH").toString());
 

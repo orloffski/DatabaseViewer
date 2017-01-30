@@ -11,9 +11,11 @@ public enum SqlTypes {
     BIGINT("bigint"),
     REAL("real"),
 
-    BIT("bit"),
     FLOAT("float"),
     DECIMAL("decimal"),
+
+    // boolean type
+    BIT("bit"),
 
     // text
     CHAR("char"),

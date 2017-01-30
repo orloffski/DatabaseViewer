@@ -2,6 +2,7 @@ package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MySQL;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
@@ -118,5 +119,30 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
     @Override
     public String userQuery(String databaseName, String userQueryString) {
         return null;
+    }
+
+    @Override
+    public ArrayList<String> getNumberTypes() {
+        ArrayList<String> numberTypes = new ArrayList<>();
+
+        numberTypes.add(SqlTypes.TINYINT.toString());
+        numberTypes.add(SqlTypes.SMALLINT.toString());
+        numberTypes.add(SqlTypes.INT.toString());
+        numberTypes.add(SqlTypes.BIGINT.toString());
+        numberTypes.add(SqlTypes.REAL.toString());
+
+        return numberTypes;
+    }
+
+    @Override
+    public ArrayList<String> getDateTimeTypes() {
+        ArrayList<String> dateTimeTypes = new ArrayList<>();
+
+        dateTimeTypes.add(SqlTypes.DATE.toString());
+        dateTimeTypes.add(SqlTypes.TIME.toString());
+        dateTimeTypes.add(SqlTypes.DATETIME.toString());
+        dateTimeTypes.add(SqlTypes.TIMESTAMP.toString());
+
+        return dateTimeTypes;
     }
 }

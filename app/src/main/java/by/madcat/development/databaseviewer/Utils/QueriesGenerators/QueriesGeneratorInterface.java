@@ -1,12 +1,18 @@
 package by.madcat.development.databaseviewer.Utils.QueriesGenerators;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 
 public interface QueriesGeneratorInterface {
+    // get connection type
     Connection getConnection() throws Exception;
+
+    // get DB type
     String getDatabaseType();
+
+    // sql queries strings
     String getDatabaseListKey();
     String getTableListKey();
     String getPrimaryKeysList(String databaseName);
@@ -26,4 +32,8 @@ public interface QueriesGeneratorInterface {
     String insertRecords(String databaseName, String tableName, String fieldsList);
     String updateRecord(String databaseName, String tableName, String updateColumnsString, String updateRecordKeyString);
     String userQuery(String databaseName, String userQueryString);
+
+    // SqlTypes methods
+    ArrayList<String> getNumberTypes();
+    ArrayList<String> getDateTimeTypes();
 }

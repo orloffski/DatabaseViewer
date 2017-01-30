@@ -153,7 +153,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             SqlTypes[] types = SqlTypes.values();
             int position = ((Spinner)field.findViewById(R.id.typesSpinner)).getSelectedItemPosition();
             String type = types[position].toString();
-            SqlTypes fieldType = SqlTypes.valueOf(type);
+            String fieldType = type;
 
             int length = 0;
             if(types[position].equals(SqlTypes.VARCHAR))

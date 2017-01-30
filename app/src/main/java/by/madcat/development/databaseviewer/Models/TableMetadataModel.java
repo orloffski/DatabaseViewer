@@ -2,8 +2,6 @@ package by.madcat.development.databaseviewer.Models;
 
 import java.util.ArrayList;
 
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
-
 public class TableMetadataModel implements Cloneable{
     private String tableName;
     private ArrayList<Fields> fieldsList;
@@ -13,8 +11,8 @@ public class TableMetadataModel implements Cloneable{
         this.fieldsList = new ArrayList<>();
     }
 
-    public Fields addNewField(String fieldName, SqlTypes fieldType, int length, boolean isKey){
-        Fields newField = new Fields(fieldName, fieldType, length, isKey);
+    public Fields addNewField(String fieldName, String sqlType, int length, boolean isKey){
+        Fields newField = new Fields(fieldName, sqlType, length, isKey);
         this.fieldsList.add(newField);
         return newField;
     }
@@ -33,14 +31,14 @@ public class TableMetadataModel implements Cloneable{
 
     public final class Fields{
         private String fieldName;
-        private SqlTypes type;
+        private String sqlType;
         private int length;
         private boolean primaryKey;
         private boolean fieldToDelete;
 
-        public Fields(String name, SqlTypes type, int length, boolean isKey){
+        public Fields(String name, String sqlType, int length, boolean isKey){
             this.fieldName = name;
-            this.type = type;
+            this.sqlType = sqlType;
             this.length = length;
             this.primaryKey = isKey;
             this.fieldToDelete = false;
@@ -50,8 +48,8 @@ public class TableMetadataModel implements Cloneable{
             this.fieldName = fieldName;
         }
 
-        private void setType(SqlTypes type) {
-            this.type = type;
+        private void setType(String sqlType) {
+            this.sqlType = sqlType;
         }
 
         private void setLength(int length) {
@@ -62,8 +60,8 @@ public class TableMetadataModel implements Cloneable{
             return fieldName;
         }
 
-        public SqlTypes getType() {
-            return type;
+        public String getType() {
+            return sqlType;
         }
 
         public int getLength() {
@@ -103,12 +101,12 @@ public class TableMetadataModel implements Cloneable{
             field.fieldToDelete = true;
     }
 
-    public void updateField(String name, SqlTypes type, int length){
+    public void updateField(String name, String sqlType, int length){
         Fields field = getFieldByName(name);
 
         if(field != null){
             field.setFieldName(name);
-            field.setType(type);
+            field.setType(sqlType);
             field.setLength(length);
         }
     }

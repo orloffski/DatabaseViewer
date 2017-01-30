@@ -2,6 +2,7 @@ package by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import by.madcat.development.databaseviewer.Models.ConnectModel;
@@ -191,6 +192,33 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
     @Override
     public String userQuery(String databaseName, String userQueryString){
         return String.format(MSSQLQueriesPartsList.QUERY, databaseName, userQueryString);
+    }
+
+    @Override
+    public ArrayList<String> getNumberTypes() {
+        ArrayList<String> numberTypes = new ArrayList<>();
+
+        numberTypes.add(SqlTypes.TINYINT.toString());
+        numberTypes.add(SqlTypes.SMALLINT.toString());
+        numberTypes.add(SqlTypes.INT.toString());
+        numberTypes.add(SqlTypes.BIGINT.toString());
+        numberTypes.add(SqlTypes.REAL.toString());
+        numberTypes.add(SqlTypes.FLOAT.toString());
+        numberTypes.add(SqlTypes.DECIMAL.toString());
+
+        return numberTypes;
+    }
+
+    @Override
+    public ArrayList<String> getDateTimeTypes() {
+        ArrayList<String> dateTimeTypes = new ArrayList<>();
+
+        dateTimeTypes.add(SqlTypes.DATE.toString());
+        dateTimeTypes.add(SqlTypes.TIME.toString());
+        dateTimeTypes.add(SqlTypes.DATETIME.toString());
+        dateTimeTypes.add(SqlTypes.TIMESTAMP.toString());
+
+        return dateTimeTypes;
     }
 
     private Properties getUsersProperties(){

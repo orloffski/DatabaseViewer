@@ -195,6 +195,30 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
     }
 
     @Override
+    public String[] getTypes() {
+        String[] types = new String[SqlTypes.values().length];
+        SqlTypes[] sqlValues = SqlTypes.values();
+
+        for(int i = 0; i < types.length; i++){
+            types[i] = sqlValues[i].toString();
+        }
+
+        return types;
+    }
+
+    @Override
+    public String[] getTypesValues() {
+        String[] values = new String[SqlTypes.values().length];
+        SqlTypes[] sqlValues = SqlTypes.values();
+
+        for(int i = 0; i < values.length; i++){
+            values[i] = sqlValues[i].toString();
+        }
+
+        return values;
+    }
+
+    @Override
     public ArrayList<String> getNumberTypes() {
         ArrayList<String> numberTypes = new ArrayList<>();
 
@@ -219,6 +243,40 @@ public class MSSQLQueriesGenerator implements QueriesGeneratorInterface {
         dateTimeTypes.add(SqlTypes.TIMESTAMP.toString());
 
         return dateTimeTypes;
+    }
+
+    @Override
+    public ArrayList<String> getTypesHavingLength() {
+        ArrayList<String> typesHavingLength = new ArrayList<>();
+
+        typesHavingLength.add(SqlTypes.TINYINT.toString());
+        typesHavingLength.add(SqlTypes.SMALLINT.toString());
+        typesHavingLength.add(SqlTypes.INT.toString());
+        typesHavingLength.add(SqlTypes.BIGINT.toString());
+        typesHavingLength.add(SqlTypes.FLOAT.toString());
+        typesHavingLength.add(SqlTypes.DECIMAL.toString());
+        typesHavingLength.add(SqlTypes.CHAR.toString());
+        typesHavingLength.add(SqlTypes.VARCHAR.toString());
+
+        return typesHavingLength;
+    }
+
+    @Override
+    public ArrayList<String> getBooleanTypes() {
+        ArrayList<String> booleanTypes = new ArrayList<>();
+
+        booleanTypes.add(SqlTypes.BIT.toString());
+
+        return booleanTypes;
+    }
+
+    @Override
+    public ArrayList<String> getLoadedTypes() {
+        ArrayList<String> loadedTypes = new ArrayList<>();
+
+        loadedTypes.add(SqlTypes.IMAGE.toString());
+
+        return loadedTypes;
     }
 
     private Properties getUsersProperties(){

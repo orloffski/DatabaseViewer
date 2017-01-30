@@ -12,8 +12,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.R;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 
 public class AddEditFieldView extends LinearLayout{
     public interface FieldDeleted{
@@ -41,6 +42,7 @@ public class AddEditFieldView extends LinearLayout{
     }
 
     private void initFieldView(){
+        final QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
         LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.add_edit_field_view,this);
 
@@ -53,13 +55,13 @@ public class AddEditFieldView extends LinearLayout{
         this.lenghtEditText.setTextColor(Color.BLACK);
 
         this.typesSpinner = (Spinner)view.findViewById(R.id.typesSpinner);
-        this.typesSpinner.setAdapter(new ArrayAdapter<>(this.context, R.layout.spinner_item, SqlTypes.values()));
+        this.typesSpinner.setAdapter(new ArrayAdapter<>(this.context, R.layout.spinner_item, queriesGeneratorInterface.getTypesValues()));
         this.typesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SqlTypes[] types = SqlTypes.values();
+                String[] types = queriesGeneratorInterface.getTypes();
 
-                if(types[i].equals(SqlTypes.VARCHAR)){
+                if(queriesGeneratorInterface.getTypesHavingLength().contains(types[i])){
                     lenghtEditText.setEnabled(true);
                     lenghtEditText.setHint("lenght");
                 }else{

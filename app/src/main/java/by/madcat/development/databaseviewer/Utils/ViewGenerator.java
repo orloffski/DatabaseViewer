@@ -33,7 +33,6 @@ import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 
 public class ViewGenerator {
@@ -73,14 +72,15 @@ public class ViewGenerator {
     }
 
     private static final void fillValuesInFields(View view, TableMetadataModel.Fields field){
-        SqlTypes[] types = SqlTypes.values();
+        QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
+        String[] types = queriesGeneratorInterface.getTypes();
         int position = Arrays.binarySearch(types, field.getType());
 
         EditText editText = (EditText) view.findViewById(R.id.fieldName);
         editText.setText(field.getFieldName());
 
         EditText length = (EditText) view.findViewById(R.id.fieldLenght);
-        if(types[position].equals(SqlTypes.VARCHAR)){
+        if(queriesGeneratorInterface.getTypesHavingLength().contains(types[position])){
             length.setText(String.valueOf(field.getLength()));
         }else{
             length.setHint("");
@@ -168,6 +168,7 @@ public class ViewGenerator {
 
     public static final void createRecordView(final Context context, TableLayout recordLayout, TableMetadataModel tableMetadata){
         int counter = 0;
+        QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
 
         for(TableMetadataModel.Fields field : tableMetadata.getFieldsList()){
             TableRow row = new TableRow(context);
@@ -179,7 +180,7 @@ public class ViewGenerator {
             fieldView.setMinWidth(150);
             row.addView(fieldView);
 
-            if(!field.getType().equals(SqlTypes.BIT)) {
+            if(!queriesGeneratorInterface.getBooleanTypes().contains(field.getType())){
                 EditText fieldValue = new EditText(context);
                 fieldValue.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 fieldValue.setMaxLines(10);
@@ -195,7 +196,7 @@ public class ViewGenerator {
                 row.addView(fieldValue);
             }
 
-            if(field.getType().equals(SqlTypes.IMAGE)) {
+            if(queriesGeneratorInterface.getLoadedTypes().contains(field.getType())){
                 Button loadFilebutton = new Button(context);
                 loadFilebutton.setText("choose file");
                 loadFilebutton.setOnClickListener(new View.OnClickListener() {

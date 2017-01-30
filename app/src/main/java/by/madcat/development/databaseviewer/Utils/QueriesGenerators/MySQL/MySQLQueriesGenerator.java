@@ -122,6 +122,30 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
     }
 
     @Override
+    public String[] getTypes() {
+        String[] types = new String[SqlTypes.values().length];
+        SqlTypes[] sqlValues = SqlTypes.values();
+
+        for(int i = 0; i < types.length; i++){
+            types[i] = sqlValues[i].toString();
+        }
+
+        return types;
+    }
+
+    @Override
+    public String[] getTypesValues() {
+        String[] values = new String[SqlTypes.values().length];
+        SqlTypes[] sqlValues = SqlTypes.values();
+
+        for(int i = 0; i < values.length; i++){
+            values[i] = sqlValues[i].toString();
+        }
+
+        return values;
+    }
+
+    @Override
     public ArrayList<String> getNumberTypes() {
         ArrayList<String> numberTypes = new ArrayList<>();
 
@@ -144,5 +168,20 @@ public class MySQLQueriesGenerator implements QueriesGeneratorInterface {
         dateTimeTypes.add(SqlTypes.TIMESTAMP.toString());
 
         return dateTimeTypes;
+    }
+
+    @Override
+    public ArrayList<String> getTypesHavingLength() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<String> getBooleanTypes() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public ArrayList<String> getLoadedTypes() {
+        return new ArrayList<>();
     }
 }

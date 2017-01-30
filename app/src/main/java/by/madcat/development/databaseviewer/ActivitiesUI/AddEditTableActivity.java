@@ -18,8 +18,8 @@ import by.madcat.development.databaseviewer.Models.ConnectModel;
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.R;
 import by.madcat.development.databaseviewer.Requests.RequestService;
+import by.madcat.development.databaseviewer.Utils.QueriesGenerators.QueriesGeneratorInterface;
 import by.madcat.development.databaseviewer.Utils.SqlJsonUtils;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
 import by.madcat.development.databaseviewer.Utils.ViewGenerator;
 
@@ -141,6 +141,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
     }
 
     private void checkChangesNewTableMetadata(){
+        QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
         newTable.setTableName(tableNameEditText.getText().toString());
 
         int fieldsLinearLayoutCount = fieldsLinearLayout.getChildCount();
@@ -150,13 +151,13 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
 
             String fieldName = ((EditText)field.findViewById(R.id.fieldName)).getText().toString();
 
-            SqlTypes[] types = SqlTypes.values();
+            String[] types = queriesGeneratorInterface.getTypes();
             int position = ((Spinner)field.findViewById(R.id.typesSpinner)).getSelectedItemPosition();
-            String type = types[position].toString();
+            String type = types[position];
             String fieldType = type;
 
             int length = 0;
-            if(types[position].equals(SqlTypes.VARCHAR))
+            if(queriesGeneratorInterface.getTypesHavingLength().contains(type))
                 length = ((EditText)field.findViewById(R.id.fieldLenght)).getText().toString().equals("") ? 0 : Integer.parseInt(((EditText)field.findViewById(R.id.fieldLenght)).getText().toString());
 
             boolean primaryKey;
@@ -173,6 +174,7 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
     }
 
     private void createTable(){
+        QueriesGeneratorInterface queriesGeneratorInterface = ConnectModel.getInstance("", null, "", "").getQueriesGenerator();
         StringBuilder stringBuilder = new StringBuilder();
         String primaryKey = "";
         int fieldsLinearLayoutCount = fieldsLinearLayout.getChildCount();
@@ -183,10 +185,10 @@ public class AddEditTableActivity extends AbstractApplicationActivity implements
             String fieldName = ((EditText)field.findViewById(R.id.fieldName)).getText().toString();
             stringBuilder.append(fieldName).append(" ");
 
-            SqlTypes[] types = SqlTypes.values();
+            String[] types = queriesGeneratorInterface.getTypes();
             int position = ((Spinner)field.findViewById(R.id.typesSpinner)).getSelectedItemPosition();
-            String fieldType = types[position].toString();
-            if(types[position].equals(SqlTypes.VARCHAR)){
+            String fieldType = types[position];
+            if(queriesGeneratorInterface.getTypesHavingLength().contains(types[position])){
                 int length = Integer.parseInt(((EditText)field.findViewById(R.id.fieldLenght)).getText().toString());
                 stringBuilder.append(fieldType).append("(").append(String.valueOf(length)).append(")");
             }else{

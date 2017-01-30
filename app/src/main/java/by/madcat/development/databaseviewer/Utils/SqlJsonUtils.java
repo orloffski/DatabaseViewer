@@ -11,7 +11,6 @@ import java.util.Iterator;
 
 import by.madcat.development.databaseviewer.Models.PrimaryKeysModel;
 import by.madcat.development.databaseviewer.Models.TableMetadataModel;
-import by.madcat.development.databaseviewer.Utils.QueriesGenerators.MSSQL.SqlTypes;
 
 public class SqlJsonUtils {
     public static final JSONArray createJsonArrayFromResultSet(ResultSet resultSet){

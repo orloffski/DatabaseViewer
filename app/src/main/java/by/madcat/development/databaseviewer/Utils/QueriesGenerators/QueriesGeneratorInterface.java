@@ -34,6 +34,11 @@ public interface QueriesGeneratorInterface {
     String userQuery(String databaseName, String userQueryString);
 
     // SqlTypes methods
+    String[] getTypes();
+    String[] getTypesValues();
     ArrayList<String> getNumberTypes();
     ArrayList<String> getDateTimeTypes();
+    ArrayList<String> getTypesHavingLength();
+    ArrayList<String> getBooleanTypes();
+    ArrayList<String> getLoadedTypes();
 }
